@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Staff Delivery Report</title>
+    <style>
+        :root {
+            --primary-red: #e61f26;
+            --bg-color: #f7dcd9;
+            --card-bg: #ffffff;
+            --text-dark: #333333;
+            --text-gray: #555555;
+            --chart-bar-pod: #f4b41a;
+            --chart-bar-att: #e61f26;
+            --recruiter-bar: #e61f26;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 14px 20px;
+            color: var(--text-dark);
+            min-height: 100vh;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background-color: var(--primary-red);
+            color: white;
+            padding: 10px 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-box {
+            width: 44px;
+            height: 44px;
+            background: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .logo-emblem {
+            width: 36px;
+            height: 36px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-yellow-part {
+            position: absolute;
+            left: 0;
+            width: 16px;
+            height: 32px;
+            background-color: #f4b41a;
+            border-radius: 16px 0 0 16px;
+        }
+
+        .logo-red-part {
+            position: absolute;
+            right: 0;
+            width: 24px;
+            height: 32px;
+            background-color: #e61f26;
+            border-radius: 0 16px 16px 0;
+        }
+
+        .logo-text-ht {
+            position: relative;
+            z-index: 2;
+            color: #ffffff;
+            font-weight: 900;
+            font-size: 16px;
+            font-style: italic;
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .filter-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        .filter-box label {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .filter-box input[type="date"] {
+            padding: 5px 10px;
+            border-radius: 4px;
+            border: none;
+            font-size: 13px;
+            cursor: pointer;
+            font-family: inherit;
+            color: var(--text-dark);
+            background-color: #ffffff;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 310px 1fr;
+            gap: 12px;
+            flex-grow: 1;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--primary-red);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+            margin-top: 4px;
+            border-left: 4px solid var(--primary-red);
+            padding-left: 6px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 10px 14px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+
+        .card h3 {
+            margin: 0 0 3px 0;
+            font-size: 13px;
+            color: var(--text-gray);
+        }
+
+        .card .number {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary-red);
+            margin: 0;
+        }
+
+        .number-active { color: #28a745 !important; }
+        .number-resigned { color: #dc3545 !important; }
+        .number-hired { color: #1967d2 !important; }
+
+        .recruiter-sublist {
+            margin-top: 6px;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .recruiter-sub-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .recruiter-sub-item span:last-child {
+            font-weight: bold;
+            color: var(--primary-red);
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .chart-section {
+            background-color: var(--card-bg);
+            padding: 14px 18px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+
+        .chart-header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--bg-color);
+            padding-bottom: 6px;
+            margin-bottom: 4px;
+        }
+
+        .chart-section h2 {
+            margin: 0;
+            font-size: 16px;
+            color: var(--text-dark);
+        }
+
+        .chart-legend {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        .chart-hint {
+            font-size: 11px;
+            color: #777;
+            margin-bottom: 6px;
+            font-style: italic;
+        }
+
+        .bar-chart-container {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 200px;
+            padding: 5px 10px 0 10px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .chart-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            height: 100%;
+            justify-content: flex-end;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-radius: 4px;
+        }
+
+        .chart-column:hover {
+            background-color: rgba(230, 31, 38, 0.05);
+        }
+
+        .chart-column.selected-column {
+            background-color: rgba(230, 31, 38, 0.12);
+            border-bottom: 3px solid var(--primary-red);
+        }
+
+        .bars-group {
+            display: flex;
+            align-items: flex-end;
+            gap: 6px;
+            height: 100%;
+            justify-content: flex-end;
+        }
+
+        .bar-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+            justify-content: flex-end;
+        }
+
+        .chart-value {
+            font-size: 11px;
+            font-weight: bold;
+            color: #444;
+            margin-bottom: 3px;
+            writing-mode: vertical-lr;
+            transform: rotate(180deg);
+        }
+
+        .chart-bar-pod {
+            width: 20px;
+            background-color: var(--chart-bar-pod);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .chart-bar-att {
+            width: 20px;
+            background-color: var(--chart-bar-att);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .chart-label {
+            font-size: 11px;
+            color: var(--text-gray);
+            margin-top: 6px;
+            text-align: center;
+        }
+
+        .detail-box {
+            background-color: var(--card-bg);
+            padding: 14px 18px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+
+        .detail-box h3 {
+            margin: 0 0 8px 0;
+            font-size: 15px;
+            color: var(--primary-red);
+            border-bottom: 1px solid var(--bg-color);
+            padding-bottom: 6px;
+        }
+
+        .detail-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .detail-table th, .detail-table td {
+            padding: 8px 6px;
+            border-bottom: 1px solid #eee;
+            text-align: center;
+        }
+
+        .detail-table th {
+            background-color: #fef0ee;
+            color: #b3141b;
+            font-weight: bold;
+        }
+
+        .badge-active {
+            background-color: #e6f4ea;
+            color: #137333;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .badge-resigned {
+            background-color: #fce8e6;
+            color: #c5221f;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .recruiter-section {
+            background-color: var(--card-bg);
+            padding: 14px 18px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+
+        .recruiter-section h2 {
+            margin: 0 0 10px 0;
+            font-size: 15px;
+            color: var(--text-dark);
+            border-bottom: 1px solid var(--bg-color);
+            padding-bottom: 6px;
+        }
+
+        .recruiter-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        .recruiter-card-item {
+            background-color: #fafafa;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            padding: 10px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .recruiter-name-flex {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--text-dark);
+        }
+
+        .recruiter-stat-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-gray);
+        }
+
+        .recruiter-stat-row span:last-child {
+            font-weight: bold;
+            color: var(--primary-red);
+        }
+
+        .bar-container {
+            flex-grow: 1;
+            background-color: #e5e5e5;
+            height: 8px;
+            border-radius: 4px;
+            margin: 4px 0;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            background-color: var(--recruiter-bar);
+            height: 100%;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="header-left">
+            <div class="logo-box">
+                <div class="logo-emblem">
+                    <div class="logo-yellow-part"></div>
+                    <div class="logo-red-part"></div>
+                    <span class="logo-text-ht">HT</span>
+                </div>
+            </div>
+            <h1>Daily Staff Delivery Report</h1>
+        </div>
+        <div class="filter-box">
+            <label for="datePicker">เลือกวันที่:</label>
+            <input type="date" id="datePicker" onchange="onDateSelected(this.value)">
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+        
+        <div class="sidebar">
+            <div class="section-title">ข้อมูลสะสม (Cumulative)</div>
+            <div class="card">
+                <h3>ยอด POD สะสม (Total POD)</h3>
+                <p class="number" id="valTotalPod">0</p>
+            </div>
+            <div class="card">
+                <h3>พนักงานยังทำงานอยู่ (Active)</h3>
+                <p class="number number-active" id="valActive">0 คน</p>
+            </div>
+            <div class="card">
+                <h3>พนักงานลาออกแล้ว (Resigned)</h3>
+                <p class="number number-resigned" id="valResigned">0 คน</p>
+            </div>
+            <div class="card">
+                <h3>ยอดรวมพนักงานทั้งหมด</h3>
+                <p class="number" style="color: #1967d2;" id="valTotalRecruited">0 คน</p>
+                <div class="recruiter-sublist" id="sidebarRecruiterCumulative"></div>
+            </div>
+
+            <div class="section-title">สรุป ณ วันที่เลือก (Selected Date)</div>
+            <div class="card">
+                <h3>มาทำงาน (Attendance)</h3>
+                <p class="number number-active" id="valAttendance">0 คน</p>
+            </div>
+            <div class="card">
+                <h3>ขาด / ลา (Absent/Leave)</h3>
+                <p class="number number-resigned" id="valAbsent">0 คน</p>
+            </div>
+            <div class="card">
+                <h3 id="todayRecruiterTitle">สรรหาได้วันที่</h3>
+                <p class="number number-hired" id="valTodayHired">0 คน</p>
+                <div class="recruiter-sublist" id="sidebarRecruiterToday"></div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            
+            <div class="chart-section">
+                <div class="chart-header-flex">
+                    <h2 id="chartTitleText">กราฟเปรียบเทียบยอด POD และจำนวนพนักงานมาทำงานรายวัน (ย้อนหลัง 14 วัน)</h2>
+                    <div class="chart-legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: var(--chart-bar-pod);"></div>
+                            <span>ยอด POD (เหลือง)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: var(--chart-bar-att);"></div>
+                            <span>พนักงานมาทำงาน (แดง)</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-hint">* คลิกที่แท่งกราฟ หรือเลือกจากปฏิทินด้านบน เพื่อดูรายละเอียดพนักงานรายวัน</div>
+                <div class="bar-chart-container" id="chartContainer"></div>
+            </div>
+
+            <div class="detail-box" id="detailBox">
+                <h3 id="detailTitle">รายละเอียดพนักงานประจำวัน</h3>
+                <table class="detail-table">
+                    <thead>
+                        <tr>
+                            <th>รหัสพนักงาน</th>
+                            <th>ผู้จัดการสรรหา</th>
+                            <th>Area</th>
+                            <th>Station</th>
+                            <th>Type</th>
+                            <th>ชื่อพนักงาน</th>
+                            <th>ผู้สรรหา</th>
+                            <th>สถานะ</th>
+                            <th>POD</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detailTableBody"></tbody>
+                </table>
+            </div>
+
+            <div class="recruiter-section">
+                <h2>รายงานผู้สรรหา (สะสม) และเงื่อนไขเงินรางวัล (จัดส่งครบ 500 ชิ้นขึ้นไป)</h2>
+                <div class="recruiter-grid" id="recruiterGrid"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycby6hAq4kTwSKzPI_APokrFEXLhzLmHDUKRT68WAFPYS7ItBoB8dfgSHs_IKzjGDgTh-5A/exec";
+
+        let globalData = null;
+        let availableDates = [];
+
+        async function loadDashboardData() {
+            try {
+                let response = await fetch(WEB_APP_URL);
+                globalData = await response.json();
+                renderDashboard(globalData);
+            } catch (error) {
+                console.error("Error loading data from Google Sheets:", error);
+                alert("ไม่สามารถดึงข้อมูลจาก Google Sheets ได้ กรุณาตรวจสอบการ Deploy Web App อีกครั้ง");
+            }
+        }
+
+        function renderDashboard(data) {
+            document.getElementById('valTotalPod').innerText = Number(data.summary.total_pod || 0).toLocaleString();
+            document.getElementById('valActive').innerText = (data.summary.active_staff || 0) + " คน";
+            document.getElementById('valResigned').innerText = (data.summary.resigned_staff || 0) + " คน";
+            document.getElementById('valTotalRecruited').innerText = (data.summary.total_recruited || 0) + " คน";
+            document.getElementById('valAbsent').innerText = "0 คน";
+
+            let recGrid = document.getElementById('recruiterGrid');
+            recGrid.innerHTML = '';
+            
+            let sublistCum = document.getElementById('sidebarRecruiterCumulative');
+            sublistCum.innerHTML = '';
+
+            data.recruiters.forEach(rec => {
+                let percent = Math.round((rec.qualified / (rec.total || 1)) * 100);
+                recGrid.innerHTML += `
+                    <div class="recruiter-card-item">
+                        <div class="recruiter-name-flex"><span>${rec.name}</span></div>
+                        <div class="bar-container"><div class="bar-fill" style="width: ${percent}%;"></div></div>
+                        <div class="recruiter-stat-row"><span>หาได้ทั้งหมด:</span><span>${rec.total} คน</span></div>
+                        <div class="recruiter-stat-row"><span>เข้าเงื่อนไข (≥500 ชิ้น):</span><span style="color: #e65100;">${rec.qualified} คน</span></div>
+                    </div>
+                `;
+                sublistCum.innerHTML += `<div class="recruiter-sub-item"><span>${rec.name}</span><span>${rec.total} คน</span></div>`;
+            });
+
+            availableDates = data.staffList.map(s => String(s.date).trim().substring(0, 10)).filter(d => d);
+
+            let targetDate = "2026-09-01"; 
+            if (availableDates.length > 0) {
+                let sortedDates = [...new Set(availableDates)].sort();
+                targetDate = sortedDates[sortedDates.length - 1]; 
+            }
+
+            document.getElementById('datePicker').value = targetDate;
+            updateView(targetDate);
+        }
+
+        function updateView(selectedDateStr) {
+            let cleanSelectedDate = String(selectedDateStr).trim().substring(0, 10);
+            let baseDate = new Date(cleanSelectedDate);
+            let activeDateArray = [];
+            
+            for (let i = 13; i >= 0; i--) {
+                let d = new Date(baseDate);
+                d.setDate(baseDate.getDate() - i);
+                let year = d.getFullYear();
+                let month = String(d.getMonth() + 1).padStart(2, '0');
+                let day = String(d.getDate()).padStart(2, '0');
+                let dateStr = `${year}-${month}-${day}`;
+                
+                let dayNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                let displayDate = `${d.getDate()} ${dayNames[d.getMonth()]}`;
+                
+                activeDateArray.push({ dateStr: dateStr, displayDate: displayDate });
+            }
+
+            renderChart(activeDateArray, cleanSelectedDate);
+            showDetailByDate(cleanSelectedDate);
+        }
+
+        function renderChart(activeDateArray, selectedDateStr) {
+            let chartContainer = document.getElementById('chartContainer');
+            chartContainer.innerHTML = '';
+
+            activeDateArray.forEach(item => {
+                let dayStaffs = globalData.staffList.filter(s => String(s.date).trim().substring(0, 10) === item.dateStr);
+                let totalPod = dayStaffs.reduce((sum, s) => sum + Number(s.pod), 0);
+                let attCount = dayStaffs.length;
+
+                let podHeight = Math.min(Math.round((totalPod / 1000) * 100), 100);
+                let attHeight = Math.min(Math.round((attCount / 30) * 100), 100);
+
+                let isSelected = (item.dateStr === selectedDateStr) ? 'selected-column' : '';
+
+                chartContainer.innerHTML += `
+                    <div class="chart-column ${isSelected}" onclick="onChartClick('${item.dateStr}')">
+                        <div class="bars-group">
+                            <div class="bar-wrapper">
+                                <span class="chart-value">${totalPod}</span>
+                                <div class="chart-bar-pod" style="height: ${podHeight}%;"></div>
+                            </div>
+                            <div class="bar-wrapper">
+                                <span class="chart-value">${attCount}</span>
+                                <div class="chart-bar-att" style="height: ${attHeight}%;"></div>
+                            </div>
+                        </div>
+                        <span class="chart-label">${item.displayDate}</span>
+                    </div>
+                `;
+            });
+        }
+
+        function onChartClick(dateStr) {
+            document.getElementById('datePicker').value = dateStr;
+            updateView(dateStr);
+        }
+
+        function onDateSelected(dateStr) {
+            updateView(dateStr);
+        }
+
+        function showDetailByDate(dateStr) {
+            let cleanDateStr = String(dateStr).trim().substring(0, 10);
+            document.getElementById('detailTitle').innerText = `รายละเอียดพนักงานประจำวันที่ ${cleanDateStr}`;
+            document.getElementById('todayRecruiterTitle').innerText = `สรรหาได้วันที่ (${cleanDateStr})`;
+
+            let matchedStaff = globalData.staffList.filter(s => String(s.date).trim().substring(0, 10) === cleanDateStr);
+            document.getElementById('valAttendance').innerText = matchedStaff.length + " คน";
+
+            let newHiresToday = globalData.newHiresList.filter(h => String(h.startDate).trim().substring(0, 10) === cleanDateStr);
+            document.getElementById('valTodayHired').innerText = newHiresToday.length + " คน";
+
+            let sublistToday = document.getElementById('sidebarRecruiterToday');
+            sublistToday.innerHTML = '';
+            
+            if (globalData && globalData.recruiters) {
+                globalData.recruiters.forEach(rec => {
+                    let countToday = newHiresToday.filter(h => h.recruiter === rec.name).length;
+                    sublistToday.innerHTML += `<div class="recruiter-sub-item"><span>${rec.name}</span><span>${countToday} คน</span></div>`;
+                });
+            }
+
+            let tbody = document.getElementById('detailTableBody');
+            tbody.innerHTML = '';
+
+            if (matchedStaff.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="9" style="color: #777; padding: 15px;">ไม่มีข้อมูลพนักงานในวันที่เลือก (${cleanDateStr})</td></tr>`;
+                return;
+            }
+
+            matchedStaff.forEach(staff => {
+                let badgeClass = staff.status === 'กำลังทำงาน' || staff.status === 'ทำงาน' ? 'badge-active' : 'badge-resigned';
+                
+                tbody.innerHTML += `
+                    <tr>
+                        <td><b>${staff.empId}</b></td>
+                        <td><b>${staff.manager}</b></td>
+                        <td>${staff.area}</td>
+                        <td>${staff.station}</td>
+                        <td>${staff.type}</td>
+                        <td>${staff.name}</td>
+                        <td>${staff.recruiter}</td>
+                        <td><span class="${badgeClass}">${staff.status}</span></td>
+                        <td><b>${staff.pod}</b></td>
+                    </tr>
+                `;
+            });
+        }
+
+        window.onload = loadDashboardData;
+    </script>
+</body>
+</html>

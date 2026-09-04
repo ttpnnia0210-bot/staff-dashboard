@@ -590,7 +590,7 @@
     </div>
 
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzbcR74UST16GsmNzghWLnOh7I3FQQnt10PGQqE8XBnJBJIH0ZgYb8A0nuf2-l_8MlqPA/exec";
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzPvwfEaXmS6yNRKIyLYHqDsOWVrUiv9iGE_wdsbkTgeEDXGuWZvnQzG4CwG0ZfVkt2SA/exec";
 
         let globalData = null;
         let allAvailableDates = [];
@@ -651,6 +651,12 @@
                 if (globalData.hiresList) {
                     globalData.hiresList.forEach(h => {
                         h.normalizedHireDate = parseSheetDate(h.hireDate);
+                    });
+                }
+
+                if (globalData.startDatesList) {
+                    globalData.startDatesList.forEach(sd => {
+                        sd.normalizedStartDate = parseSheetDate(sd.startDate);
                     });
                 }
 
@@ -800,10 +806,13 @@
             let matchedStaff = globalData.staffList.filter(s => s.normalizedDate === cleanDateStr);
             document.getElementById('valAttendance').innerText = matchedStaff.length + " คน";
 
-            // ดึงข้อมูลพนักงานที่สรรหาได้ในวัน T+1
+            // ดึงข้อมูลพนักงานที่เริ่มงานในวัน T+1 (จาก startDatesList)
+            let matchedStarts = globalData.startDatesList ? globalData.startDatesList.filter(sd => sd.normalizedStartDate === tPlusOneDate) : [];
+            document.getElementById('valStartToday').innerText = matchedStarts.length + " คน";
+
+            // ดึงข้อมูลพนักงานที่สรรหาได้ในวัน T+1 (จาก hiresList)
             let matchedHires = globalData.hiresList ? globalData.hiresList.filter(h => h.normalizedHireDate === tPlusOneDate) : [];
             document.getElementById('valTodayHired').innerText = matchedHires.length + " คน";
-            document.getElementById('valStartToday').innerText = matchedHires.length + " คน";
 
             let sublistToday = document.getElementById('sidebarRecruiterToday');
             sublistToday.innerHTML = '';

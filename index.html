@@ -132,7 +132,7 @@
             background-color: #ffffff;
         }
 
-        /* Top Metrics Cards Row (Full Width Horizontal Grid) */
+        /* Top Metrics Cards Row (7 Cards) */
         .top-metrics-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -316,7 +316,7 @@
             white-space: nowrap;
         }
 
-        /* Bottom Section (Table & Recruiter Report) */
+        /* Bottom Section */
         .bottom-section {
             display: flex;
             flex-direction: column;
@@ -466,7 +466,7 @@
         </div>
     </div>
 
-    <!-- Top Metrics Cards Row -->
+    <!-- Top Metrics Cards Row (สลับตำแหน่งการ์ดตามที่ต้องการ และจัดเรียงครบ 7 ช่อง) -->
     <div class="top-metrics-grid">
         <div class="card">
             <h3>ยอด POD สะสม (Total POD)</h3>
@@ -481,11 +481,6 @@
             <p class="number number-resigned" id="valResigned">0 คน</p>
         </div>
         <div class="card">
-            <h3>ยอดรวมพนักงานทั้งหมด</h3>
-            <p class="number" style="color: #1967d2;" id="valTotalRecruited">0 คน</p>
-            <div class="recruiter-sublist" id="sidebarRecruiterCumulative"></div>
-        </div>
-        <div class="card">
             <h3 id="attendanceTitle">มาทำงาน</h3>
             <p class="number number-active" id="valAttendance">0 คน</p>
         </div>
@@ -497,6 +492,11 @@
             <h3 id="todayRecruiterTitle">สรรหาได้วันที่</h3>
             <p class="number number-hired" id="valTodayHired">0 คน</p>
             <div class="recruiter-sublist" id="sidebarRecruiterToday"></div>
+        </div>
+        <div class="card">
+            <h3>ยอดรวมพนักงานทั้งหมด</h3>
+            <p class="number" style="color: #1967d2;" id="valTotalRecruited">0 คน</p>
+            <div class="recruiter-sublist" id="sidebarRecruiterCumulative"></div>
         </div>
     </div>
 
@@ -519,7 +519,7 @@
         <div class="bar-chart-container" id="chartContainer"></div>
     </div>
 
-    <!-- Bottom Section: Detail Table & Recruiter Report -->
+    <!-- Bottom Section -->
     <div class="bottom-section">
         <div class="detail-box" id="detailBox">
             <h3 id="detailTitle">รายละเอียดพนักงานประจำวัน</h3>
@@ -570,6 +570,7 @@
             return s;
         }
 
+        // ฟังก์ชันบวกเพิ่ม 1 วัน (T+1) สำหรับวันที่สรรหา
         function addOneDay(dateStr) {
             if (!dateStr || dateStr.length !== 10) return "";
             let parts = dateStr.split('-').map(Number);
@@ -590,6 +591,7 @@
                     s.normalizedDate = parseSheetDate(s.date);
                 });
                 
+                // ใช้หลักการ T+1: นำวันที่ในชีตมาบวกเพิ่ม 1 วัน
                 globalData.newHiresList.forEach(h => {
                     let rawStart = parseSheetDate(h.startDate);
                     h.normalizedStartDate = addOneDay(rawStart);
@@ -628,13 +630,13 @@
                 sublistCum.innerHTML += `<div class="recruiter-sub-item"><span>${rec.name}</span><span>${rec.total} คน</span></div>`;
             });
 
-            // กรองเอาเฉพาะวันที่ไม่ใช่อนาคต (ตัดวันที่เกินปีปัจจุบันหรือเดือนธันวาคมทิ้ง เพื่อป้องกันข้อมูลรวน)
-            let todayStr = "2026-09-04"; // วันที่ปัจจุบันตามระบบ
+            // กรองข้อมูลเฉพาะวันที่ไม่เกินปัจจุบัน (ตัดข้อมูลธันวาคมออก ป้องกันวันที่เพี้ยน)
+            let todayStr = "2026-09-04";
             let rawDates = data.staffList.map(s => s.normalizedDate).filter(d => d && d.length === 10 && d <= todayStr);
             allAvailableDates = [...new Set(rawDates)].sort();
 
             if (allAvailableDates.length > 0) {
-                let maxDate = allAvailableDates[allAvailableDates.length - 1]; // วันล่าสุดที่มีข้อมูลจริง (ไม่เกินวันนี้)
+                let maxDate = allAvailableDates[allAvailableDates.length - 1]; // วันล่าสุดที่มีข้อมูลจริง
                 let startIndex = Math.max(0, allAvailableDates.length - 30);
                 let startDate = allAvailableDates[startIndex];
 
@@ -643,7 +645,7 @@
 
                 startPicker.value = startDate;
                 endPicker.value = maxDate;
-                endPicker.max = maxDate; // ล็อกไม่ให้เลือกเกินวันปัจจุบันที่มีข้อมูลจริง
+                endPicker.max = maxDate; // ล็อกไม่ให้เลือกวันที่เกินปัจจุบัน
 
                 currentSelectedDate = maxDate;
             }
@@ -727,6 +729,7 @@
             if (!dateStr) return;
             let cleanDateStr = String(dateStr).trim().substring(0, 10);
             
+            // อัปเดตหัวข้อวันที่ให้ถูกต้องแม่นยำ
             document.getElementById('attendanceTitle').innerText = `มาทำงาน (${cleanDateStr})`;
             document.getElementById('detailTitle').innerText = `รายละเอียดพนักงานประจำวันที่ ${cleanDateStr}`;
             document.getElementById('todayRecruiterTitle').innerText = `สรรหาได้วันที่ (${cleanDateStr})`;
@@ -734,6 +737,7 @@
             let matchedStaff = globalData.staffList.filter(s => s.normalizedDate === cleanDateStr);
             document.getElementById('valAttendance').innerText = matchedStaff.length + " คน";
 
+            // ข้อมูลสรรหาแสดงผลตรงตามเงื่อนไข T+1 ที่บวกเพิ่ม 1 วันเรียบร้อย
             let newHiresToday = globalData.newHiresList.filter(h => h.normalizedStartDate === cleanDateStr);
             document.getElementById('valTodayHired').innerText = newHiresToday.length + " คน";
 

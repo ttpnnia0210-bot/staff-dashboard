@@ -466,7 +466,7 @@
         </div>
     </div>
 
-    <!-- Top Metrics Cards Row (Horizontal Full Width) -->
+    <!-- Top Metrics Cards Row -->
     <div class="top-metrics-grid">
         <div class="card">
             <h3>ยอด POD สะสม (Total POD)</h3>
@@ -486,7 +486,7 @@
             <div class="recruiter-sublist" id="sidebarRecruiterCumulative"></div>
         </div>
         <div class="card">
-            <h3 id="attendanceTitle">มาทำงาน (Attendance)</h3>
+            <h3 id="attendanceTitle">มาทำงาน</h3>
             <p class="number number-active" id="valAttendance">0 คน</p>
         </div>
         <div class="card">
@@ -632,19 +632,29 @@
             allAvailableDates = [...new Set(rawDates)].sort();
 
             if (allAvailableDates.length > 0) {
-                let endDate = allAvailableDates[allAvailableDates.length - 1];
+                let maxDate = allAvailableDates[allAvailableDates.length - 1]; // วันล่าสุดที่มีข้อมูลจริงในชีต
                 let startIndex = Math.max(0, allAvailableDates.length - 30);
                 let startDate = allAvailableDates[startIndex];
 
-                document.getElementById('startDatePicker').value = startDate;
-                document.getElementById('endDatePicker').value = endDate;
-                currentSelectedDate = endDate;
+                let startPicker = document.getElementById('startDatePicker');
+                let endPicker = document.getElementById('endDatePicker');
+
+                startPicker.value = startDate;
+                endPicker.value = maxDate;
+                endPicker.max = maxDate; // ล็อกไม่ให้เลือกเกินวันปัจจุบันที่มีข้อมูล
+
+                currentSelectedDate = maxDate;
             }
 
             updateView();
         }
 
         function onDateRangeChanged() {
+            let maxDate = allAvailableDates[allAvailableDates.length - 1];
+            let endPicker = document.getElementById('endDatePicker');
+            if (endPicker.value > maxDate) {
+                endPicker.value = maxDate;
+            }
             updateView();
         }
 
@@ -715,6 +725,7 @@
             if (!dateStr) return;
             let cleanDateStr = String(dateStr).trim().substring(0, 10);
             
+            // แก้ไขข้อความหัวข้อให้ตรงกับวันที่เลือกจริงอย่างแม่นยำ
             document.getElementById('attendanceTitle').innerText = `มาทำงาน (${cleanDateStr})`;
             document.getElementById('detailTitle').innerText = `รายละเอียดพนักงานประจำวันที่ ${cleanDateStr}`;
             document.getElementById('todayRecruiterTitle').innerText = `สรรหาได้วันที่ (${cleanDateStr})`;

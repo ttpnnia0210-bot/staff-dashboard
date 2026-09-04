@@ -500,7 +500,6 @@
         </div>
     </div>
 
-    <!-- Top Metrics Cards Row (8 Cards) -->
     <div class="top-metrics-grid">
         <div class="card">
             <h3>ยอด POD สะสม (Total POD)</h3>
@@ -537,7 +536,6 @@
         </div>
     </div>
 
-    <!-- Full Width Chart Section -->
     <div class="chart-section">
         <div class="chart-header-flex">
             <h2 id="chartTitleText">กราฟเปรียบเทียบยอด POD และจำนวนพนักงานมาทำงานรายวัน</h2>
@@ -556,7 +554,6 @@
         <div class="bar-chart-container" id="chartContainer"></div>
     </div>
 
-    <!-- Bottom Section -->
     <div class="bottom-section">
         <div class="detail-box" id="detailBox">
             <h3 id="detailTitle">รายละเอียดพนักงานมาทำงานประจำวัน</h3>
@@ -585,7 +582,7 @@
     </div>
 
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyMtiDapmoYO93gf_FJ8njJsmWzNzUrltyvTx0p1j7abdynl7ytURsfxjM1QOaf_BzRHQ/exec";
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxeSAXtsdfsLLA8DLJyL_nuk2oyjLCL0_GefyMN6ZY8P06ywxMg7pDNvYhFHlpYGmxrvg/exec";
 
         let globalData = null;
         let allAvailableDates = [];
@@ -763,7 +760,6 @@
             document.getElementById('valAttendance').innerText = matchedStaff.length + " คน";
             document.getElementById('valTodayHired').innerText = matchedStaff.length + " คน";
 
-            // แยกชื่อผู้สรรหาและจำนวนคนที่สรรหาได้ในวันนั้นๆ พร้อมแสดงชื่อ
             let sublistToday = document.getElementById('sidebarRecruiterToday');
             sublistToday.innerHTML = '';
             

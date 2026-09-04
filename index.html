@@ -132,6 +132,40 @@
             background-color: #ffffff;
         }
 
+        /* ปุ่มรีเฟรช */
+        .refresh-btn {
+            background-color: #ffffff;
+            color: var(--primary-red);
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background 0.2s, transform 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .refresh-btn:hover {
+            background-color: #f1f1f1;
+        }
+
+        .refresh-btn:active {
+            transform: scale(0.95);
+        }
+
+        .refresh-icon {
+            display: inline-block;
+            transition: transform 0.6s ease;
+        }
+
+        .refresh-btn.spinning .refresh-icon {
+            transform: rotate(360deg);
+        }
+
         /* Top Metrics Cards Row (7 Cards) */
         .top-metrics-grid {
             display: grid;
@@ -463,10 +497,13 @@
                 <label for="endDatePicker">ถึงวันที่:</label>
                 <input type="date" id="endDatePicker" onchange="onDateRangeChanged()">
             </div>
+            <button class="refresh-btn" id="refreshBtn" onclick="refreshDashboardData()" title="รีเฟรชข้อมูลล่าสุด">
+                <span class="refresh-icon">🔄</span> รีเฟรช
+            </button>
         </div>
     </div>
 
-    <!-- Top Metrics Cards Row (7 Cards) -->
+    <!-- Top Metrics Cards Row (ย้าย "ยอดรวมพนักงานทั้งหมด" มาอยู่อันดับ 2 จากซ้าย) -->
     <div class="top-metrics-grid">
         <div class="card">
             <h3>ยอด POD สะสม (Total POD)</h3>
@@ -581,9 +618,14 @@
             return `${y}-${m}-${day}`;
         }
 
-        async function loadDashboardData() {
+        async function loadDashboardData(isRefresh = false) {
+            let refreshBtn = document.getElementById('refreshBtn');
+            if (isRefresh) {
+                refreshBtn.classList.add('spinning');
+            }
+
             try {
-                let response = await fetch(WEB_APP_URL);
+                let response = await fetch(WEB_APP_URL + "?t=" + new Date().getTime());
                 globalData = await response.json();
                 
                 globalData.staffList.forEach(s => {
@@ -596,10 +638,20 @@
                 });
 
                 renderDashboard(globalData);
+                if (isRefresh) {
+                    setTimeout(() => refreshBtn.classList.remove('spinning'), 600);
+                }
             } catch (error) {
                 console.error("Error loading data from Google Sheets:", error);
                 alert("ไม่สามารถดึงข้อมูลจาก Google Sheets ได้ กรุณาตรวจสอบการ Deploy Web App อีกครั้ง");
+                if (isRefresh) {
+                    refreshBtn.classList.remove('spinning');
+                }
             }
+        }
+
+        function refreshDashboardData() {
+            loadDashboardData(true);
         }
 
         function renderDashboard(data) {
@@ -774,7 +826,7 @@
             });
         }
 
-        window.onload = loadDashboardData;
+        window.onload = () => loadDashboardData(false);
     </script>
 </body>
 </html>

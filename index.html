@@ -527,8 +527,8 @@
             <p class="number number-resigned" id="valAbsent">0 คน</p>
         </div>
         <div class="card">
-            <h3 id="todayRecruiterTitle">ข้อมูลวันนี้</h3>
-            <p class="number number-hired" id="valTodayHired">0 รายการ</p>
+            <h3 id="todayRecruiterTitle">มาทำงานวันนี้</h3>
+            <p class="number number-hired" id="valTodayHired">0 คน</p>
             <div class="recruiter-sublist" id="sidebarRecruiterToday"></div>
         </div>
     </div>
@@ -536,7 +536,7 @@
     <!-- Full Width Chart Section -->
     <div class="chart-section">
         <div class="chart-header-flex">
-            <h2 id="chartTitleText">กราฟเปรียบเทียบยอด POD และจำนวนรายการมาทำงานรายวัน</h2>
+            <h2 id="chartTitleText">กราฟเปรียบเทียบยอด POD และจำนวนพนักงานมาทำงานรายวัน</h2>
             <div class="chart-legend">
                 <div class="legend-item">
                     <div class="legend-color" style="background-color: var(--chart-bar-pod);"></div>
@@ -544,7 +544,7 @@
                 </div>
                 <div class="legend-item">
                     <div class="legend-color" style="background-color: var(--chart-bar-att);"></div>
-                    <span>จำนวนรายการ (แดง)</span>
+                    <span>พนักงานมาทำงาน (แดง)</span>
                 </div>
             </div>
         </div>
@@ -555,7 +555,7 @@
     <!-- Bottom Section -->
     <div class="bottom-section">
         <div class="detail-box" id="detailBox">
-            <h3 id="detailTitle">รายละเอียดพนักงานประจำวัน</h3>
+            <h3 id="detailTitle">รายละเอียดพนักงานมาทำงานประจำวัน</h3>
             <table class="detail-table">
                 <thead>
                     <tr>
@@ -655,8 +655,8 @@
                     <div class="recruiter-card-item">
                         <div class="recruiter-name-flex"><span>${rec.name}</span></div>
                         <div class="bar-container"><div class="bar-fill" style="width: ${percent}%;"></div></div>
-                        <div class="recruiter-stat-row"><span>บันทึกทั้งหมด:</span><span>${rec.total} รายการ</span></div>
-                        <div class="recruiter-stat-row"><span>เข้าเงื่อนไข (≥500 ชิ้น):</span><span style="color: #e65100;">${rec.qualified} รายการ</span></div>
+                        <div class="recruiter-stat-row"><span>งานทั้งหมด:</span><span>${rec.total} งาน</span></div>
+                        <div class="recruiter-stat-row"><span>เข้าเงื่อนไข (≥500 ชิ้น):</span><span style="color: #e65100;">${rec.qualified} คน</span></div>
                     </div>
                 `;
                 sublistCum.innerHTML += `<div class="recruiter-sub-item"><span>${rec.name}</span><span>${rec.total}</span></div>`;
@@ -762,12 +762,12 @@
             
             document.getElementById('attendanceTitle').innerText = `มาทำงาน (${cleanDateStr})`;
             document.getElementById('absentTitle').innerText = `ขาด / ลา (${cleanDateStr})`;
-            document.getElementById('detailTitle').innerText = `รายละเอียดพนักงานประจำวันที่ ${cleanDateStr}`;
-            document.getElementById('todayRecruiterTitle').innerText = `ข้อมูลวันที่ (${cleanDateStr})`;
+            document.getElementById('detailTitle').innerText = `รายละเอียดพนักงานมาทำงานประจำวันที่ ${cleanDateStr}`;
+            document.getElementById('todayRecruiterTitle').innerText = `มาทำงานวันที่ (${cleanDateStr})`;
 
             let matchedStaff = globalData.staffList.filter(s => s.normalizedDate === cleanDateStr);
             document.getElementById('valAttendance').innerText = matchedStaff.length + " คน";
-            document.getElementById('valTodayHired').innerText = matchedStaff.length + " รายการ";
+            document.getElementById('valTodayHired').innerText = matchedStaff.length + " คน";
 
             let sublistToday = document.getElementById('sidebarRecruiterToday');
             sublistToday.innerHTML = '';
@@ -776,7 +776,7 @@
                 globalData.recruiters.forEach(rec => {
                     let countToday = matchedStaff.filter(h => h.recruiter === rec.name).length;
                     if (countToday > 0) {
-                        sublistToday.innerHTML += `<div class="recruiter-sub-item"><span>${rec.name}</span><span>${countToday}</span></div>`;
+                        sublistToday.innerHTML += `<div class="recruiter-sub-item"><span>${rec.name}</span><span>${countToday} คน</span></div>`;
                     }
                 });
             }

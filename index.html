@@ -578,7 +578,7 @@
     </div>
 
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyQzUaV7Q_y6Gh92DdQ7mjVxYidRfOVSx2kbHWOCitoMk8W8raPCGCQDNfcojc8xbOPXQ/exec";
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw9W6HqGO23pUD0RLFvekySN2n9WSVb-rlBc60wbBN7WOxwenF-CbHgZHnvSHE-rW0eSQ/exec";
 
         let globalData = null;
         let allAvailableDates = [];
@@ -636,7 +636,9 @@
         }
 
         function renderDashboard(data) {
-            document.getElementById('valTotalPod').innerText = Number(data.summary.total_pod || 0).toLocaleString();
+            let calculatedTotalPod = data.staffList.reduce((sum, s) => sum + Number(s.pod || 0), 0);
+            document.getElementById('valTotalPod').innerText = calculatedTotalPod.toLocaleString();
+
             document.getElementById('valActive').innerText = (data.summary.active_staff || 0) + " คน";
             document.getElementById('valResigned').innerText = (data.summary.resigned_staff || 0) + " คน";
             document.getElementById('valTotalRecruited').innerText = (data.summary.total_recruited || 0) + " คน";

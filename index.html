@@ -662,8 +662,8 @@
                 sublistCum.innerHTML += `<div class="recruiter-sub-item"><span>${rec.name}</span><span>${rec.total}</span></div>`;
             });
 
-            let todayStr = "2026-09-04";
-            let rawDates = data.staffList.map(s => s.normalizedDate).filter(d => d && d.length === 10 && d <= todayStr);
+            // ดึงรายชื่อวันที่ทั้งหมดจากชีต และเลือกวันล่าสุดอัตโนมัติ
+            let rawDates = data.staffList.map(s => s.normalizedDate).filter(d => d && d.length === 10);
             allAvailableDates = [...new Set(rawDates)].sort();
 
             if (allAvailableDates.length > 0) {
@@ -675,8 +675,9 @@
                 let endPicker = document.getElementById('endDatePicker');
 
                 startPicker.value = startDate;
-                endPicker.value = maxDate;
                 endPicker.max = maxDate;
+                endPicker.value = maxDate;
+                endPicker.max = maxDate; // ปลดล็อกให้เลือกถึงวันที่ล่าสุดในชีตได้เสมอ
 
                 currentSelectedDate = maxDate;
             }
@@ -687,7 +688,7 @@
         function onDateRangeChanged() {
             let maxDate = allAvailableDates[allAvailableDates.length - 1];
             let endPicker = document.getElementById('endDatePicker');
-            if (endPicker.value > maxDate) {
+            if (maxDate && endPicker.value > maxDate) {
                 endPicker.value = maxDate;
             }
             updateView();

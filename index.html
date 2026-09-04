@@ -584,19 +584,18 @@
         </div>
 
         <div class="recruiter-section">
-            <h2>รายงานผลงานผู้สรรหา (สะสมจากสถานะพนักงาน) และเงื่อนไข (POD ≥ 500)</h2>
+            <h2>รายงานผลงานผู้สรรหา และเงื่อนไข (POD ≥ 500)</h2>
             <div class="recruiter-grid" id="recruiterGrid"></div>
         </div>
     </div>
 
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwiDX7Tg_ga1zjTymRUaGCRWRS4YDY_n4rodToUyH-DMK-g8e37gtsGMEqpvHGnu_0e_g/exec";
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxL2IfjzQ5OgJ22gZJ5VqYH-SD2KtWG7e28_Wh2UFzTTETz9-B7FfmX5IUYZHjYDkB7rg/exec";
 
         let globalData = null;
         let allAvailableDates = [];
         let currentSelectedDate = "";
 
-        // ฟังก์ชันแปลงรูปแบบวันที่ รองรับทั้งเครื่องหมาย / , . และ -
         function parseSheetDate(dateStr) {
             if (!dateStr) return "";
             let s = String(dateStr).trim().split('T')[0].split(' ')[0];
@@ -622,7 +621,6 @@
             return s;
         }
 
-        // ฟังก์ชันบวกเพิ่ม 1 วันตรงๆ ตามปฏิทิน (T+1)
         function addOneDay(dateStr) {
             if (!dateStr) return "";
             let parts = dateStr.split('-');
@@ -794,7 +792,6 @@
             if (!dateStr) return;
             let cleanDateStr = String(dateStr).trim().substring(0, 10);
             
-            // คำนวณวันถัดไป T+1 ตามปฏิทินจริงตรงๆ
             let tPlusOneDate = addOneDay(cleanDateStr);
 
             document.getElementById('attendanceTitle').innerText = `มาทำงาน (${cleanDateStr})`;
@@ -807,11 +804,9 @@
             let matchedStaff = globalData.staffList.filter(s => s.normalizedDate === cleanDateStr);
             document.getElementById('valAttendance').innerText = matchedStaff.length + " คน";
 
-            // ดึงข้อมูลพนักงานที่เริ่มงานในวัน T+1 (จาก startDatesList)
             let matchedStarts = globalData.startDatesList ? globalData.startDatesList.filter(sd => sd.normalizedStartDate === tPlusOneDate) : [];
             document.getElementById('valStartToday').innerText = matchedStarts.length + " คน";
 
-            // ดึงข้อมูลพนักงานที่สรรหาได้ในวัน T+1 (จาก hiresList)
             let matchedHires = globalData.hiresList ? globalData.hiresList.filter(h => h.normalizedHireDate === tPlusOneDate) : [];
             document.getElementById('valTodayHired').innerText = matchedHires.length + " คน";
 

@@ -590,7 +590,7 @@
     </div>
 
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwPrYRs21zfLKzEiu8ikWb_IiOPKzFNDjwtCGMkIhAOhPDoBbS_DFWidTfR8GBBd_2yvg/exec";
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzh1XzRTJl4DHVSuwDKkC1tMveOe2tY0vmu7WdgB16U5E-foAcwfBrgEN61HQKw7ewaKg/exec";
 
         let globalData = null;
         let allAvailableDates = [];
@@ -619,18 +619,6 @@
                 }
             }
             return s;
-        }
-
-        function addOneDay(dateStr) {
-            if (!dateStr) return "";
-            let parts = dateStr.split('-');
-            if (parts.length !== 3) return dateStr;
-            let d = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
-            d.setDate(d.getDate() + 1);
-            let y = d.getFullYear();
-            let m = String(d.getMonth() + 1).padStart(2, '0');
-            let day = String(d.getDate()).padStart(2, '0');
-            return `${y}-${m}-${day}`;
         }
 
         async function loadDashboardData(isRefresh = false) {
@@ -792,22 +780,23 @@
             if (!dateStr) return;
             let cleanDateStr = String(dateStr).trim().substring(0, 10);
             
-            let tPlusOneDate = addOneDay(cleanDateStr);
+            // ใช้เทียบกับวันที่เลือกตรงๆ (วันนี้ = วันที่เลือก)
+            let targetDate = cleanDateStr;
 
             document.getElementById('attendanceTitle').innerText = `มาทำงาน (${cleanDateStr})`;
             document.getElementById('absentTitle').innerText = `ขาด / ลา (${cleanDateStr})`;
             document.getElementById('detailTitle').innerText = `รายละเอียดพนักงานมาทำงานประจำวันที่ ${cleanDateStr}`;
             
-            document.getElementById('startTodayTitle').innerText = `เริ่มงานวันนี้ (T+1: ${tPlusOneDate})`;
-            document.getElementById('todayRecruiterTitle').innerText = `พนักงานที่สรรหาได้ (T+1: ${tPlusOneDate})`;
+            document.getElementById('startTodayTitle').innerText = `เริ่มงานวันนี้ (${targetDate})`;
+            document.getElementById('todayRecruiterTitle').innerText = `พนักงานที่สรรหาได้ (${targetDate})`;
 
             let matchedStaff = globalData.staffList.filter(s => s.normalizedDate === cleanDateStr);
             document.getElementById('valAttendance').innerText = matchedStaff.length + " คน";
 
-            let matchedStarts = globalData.startDatesList ? globalData.startDatesList.filter(sd => sd.normalizedStartDate === tPlusOneDate) : [];
+            let matchedStarts = globalData.startDatesList ? globalData.startDatesList.filter(sd => sd.normalizedStartDate === targetDate) : [];
             document.getElementById('valStartToday').innerText = matchedStarts.length + " คน";
 
-            let matchedHires = globalData.hiresList ? globalData.hiresList.filter(h => h.normalizedHireDate === tPlusOneDate) : [];
+            let matchedHires = globalData.hiresList ? globalData.hiresList.filter(h => h.normalizedHireDate === targetDate) : [];
             document.getElementById('valTodayHired').innerText = matchedHires.length + " คน";
 
             let sublistToday = document.getElementById('sidebarRecruiterToday');

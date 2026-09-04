@@ -592,7 +592,7 @@
 
             availableDates = data.staffList.map(s => String(s.date).trim().substring(0, 10)).filter(d => d);
 
-            let targetDate = "2026-09-01"; 
+            let targetDate = "2026-09-02"; 
             if (availableDates.length > 0) {
                 let sortedDates = [...new Set(availableDates)].sort();
                 targetDate = sortedDates[sortedDates.length - 1]; 
@@ -604,12 +604,15 @@
 
         function updateView(selectedDateStr) {
             let cleanSelectedDate = String(selectedDateStr).trim().substring(0, 10);
-            let baseDate = new Date(cleanSelectedDate);
+            
+            // แก้ไขปัญหา Timezone ซ้อนทับและคำนวณวันย้อนหลัง 14 วันให้แม่นยำ
+            let [sYear, sMonth, sDay] = cleanSelectedDate.split('-').map(Number);
+            let baseDate = new Date(sYear, sMonth - 1, sDay);
+            
             let activeDateArray = [];
             
             for (let i = 13; i >= 0; i--) {
-                let d = new Date(baseDate);
-                d.setDate(baseDate.getDate() - i);
+                let d = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() - i);
                 let year = d.getFullYear();
                 let month = String(d.getMonth() + 1).padStart(2, '0');
                 let day = String(d.getDate()).padStart(2, '0');

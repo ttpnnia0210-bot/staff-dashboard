@@ -466,11 +466,16 @@
         </div>
     </div>
 
-    <!-- Top Metrics Cards Row (สลับตำแหน่งการ์ด 2 ช่องขวาสุดให้ถูกต้องแล้ว) -->
+    <!-- Top Metrics Cards Row (7 Cards) -->
     <div class="top-metrics-grid">
         <div class="card">
             <h3>ยอด POD สะสม (Total POD)</h3>
             <p class="number" id="valTotalPod">0</p>
+        </div>
+        <div class="card">
+            <h3>ยอดรวมพนักงานทั้งหมด</h3>
+            <p class="number" style="color: #1967d2;" id="valTotalRecruited">0 คน</p>
+            <div class="recruiter-sublist" id="sidebarRecruiterCumulative"></div>
         </div>
         <div class="card">
             <h3>พนักงานยังทำงานอยู่ (Active)</h3>
@@ -485,13 +490,8 @@
             <p class="number number-active" id="valAttendance">0 คน</p>
         </div>
         <div class="card">
-            <h3>ขาด / ลา (Absent/Leave)</h3>
+            <h3 id="absentTitle">ขาด / ลา</h3>
             <p class="number number-resigned" id="valAbsent">0 คน</p>
-        </div>
-        <div class="card">
-            <h3>ยอดรวมพนักงานทั้งหมด</h3>
-            <p class="number" style="color: #1967d2;" id="valTotalRecruited">0 คน</p>
-            <div class="recruiter-sublist" id="sidebarRecruiterCumulative"></div>
         </div>
         <div class="card">
             <h3 id="todayRecruiterTitle">สรรหาได้วันที่</h3>
@@ -570,7 +570,6 @@
             return s;
         }
 
-        // ฟังก์ชันบวกเพิ่ม 1 วัน (T+1) สำหรับวันที่สรรหา
         function addOneDay(dateStr) {
             if (!dateStr || dateStr.length !== 10) return "";
             let parts = dateStr.split('-').map(Number);
@@ -728,6 +727,7 @@
             let cleanDateStr = String(dateStr).trim().substring(0, 10);
             
             document.getElementById('attendanceTitle').innerText = `มาทำงาน (${cleanDateStr})`;
+            document.getElementById('absentTitle').innerText = `ขาด / ลา (${cleanDateStr})`;
             document.getElementById('detailTitle').innerText = `รายละเอียดพนักงานประจำวันที่ ${cleanDateStr}`;
             document.getElementById('todayRecruiterTitle').innerText = `สรรหาได้วันที่ (${cleanDateStr})`;
 

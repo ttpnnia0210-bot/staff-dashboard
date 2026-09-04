@@ -500,7 +500,7 @@
         </div>
     </div>
 
-    <!-- Top Metrics Cards Row (8 Cards including Pending Staff) -->
+    <!-- Top Metrics Cards Row (8 Cards) -->
     <div class="top-metrics-grid">
         <div class="card">
             <h3>ยอด POD สะสม (Total POD)</h3>
@@ -531,7 +531,7 @@
             <p class="number number-resigned" id="valAbsent">0 คน</p>
         </div>
         <div class="card">
-            <h3 id="todayRecruiterTitle">มาทำงานวันนี้</h3>
+            <h3 id="todayRecruiterTitle">พนักงานที่สรรหาได้วันนี้</h3>
             <p class="number number-hired" id="valTodayHired">0 คน</p>
             <div class="recruiter-sublist" id="sidebarRecruiterToday"></div>
         </div>
@@ -651,9 +651,6 @@
             let recGrid = document.getElementById('recruiterGrid');
             recGrid.innerHTML = '';
             
-            let sublistCum = document.getElementById('sidebarRecruiterCumulative');
-            if (sublistCum) sublistCum.innerHTML = '';
-
             data.recruiters.forEach(rec => {
                 let percent = Math.round((rec.qualified / (rec.total || 1)) * 100);
                 recGrid.innerHTML += `
@@ -760,12 +757,13 @@
             document.getElementById('attendanceTitle').innerText = `มาทำงาน (${cleanDateStr})`;
             document.getElementById('absentTitle').innerText = `ขาด / ลา (${cleanDateStr})`;
             document.getElementById('detailTitle').innerText = `รายละเอียดพนักงานมาทำงานประจำวันที่ ${cleanDateStr}`;
-            document.getElementById('todayRecruiterTitle').innerText = `มาทำงานวันที่ (${cleanDateStr})`;
+            document.getElementById('todayRecruiterTitle').innerText = `พนักงานที่สรรหาได้ (${cleanDateStr})`;
 
             let matchedStaff = globalData.staffList.filter(s => s.normalizedDate === cleanDateStr);
             document.getElementById('valAttendance').innerText = matchedStaff.length + " คน";
             document.getElementById('valTodayHired').innerText = matchedStaff.length + " คน";
 
+            // แยกชื่อผู้สรรหาและจำนวนคนที่สรรหาได้ในวันนั้นๆ พร้อมแสดงชื่อ
             let sublistToday = document.getElementById('sidebarRecruiterToday');
             sublistToday.innerHTML = '';
             

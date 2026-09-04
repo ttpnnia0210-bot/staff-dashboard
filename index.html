@@ -791,7 +791,6 @@
             let attendanceCount = matchedStaff.length;
             document.getElementById('valAttendance').innerText = attendanceCount + " คน";
 
-            // คำนวณ ขาด/ลา = ช่องทำงานอยู่ (Active) - ช่องมาทำงาน (ตามวันที่เลือก)
             let activeStaffCount = Number(globalData.summary.active_staff || 0);
             let absentCount = Math.max(0, activeStaffCount - attendanceCount);
             document.getElementById('valAbsent').innerText = absentCount + " คน";
@@ -814,7 +813,8 @@
                 });
             }
 
-            let tbody = document.getElementById('detailTableBody');
+            let tbody = document.getElementById('detailTableButton') || document.getElementById('detailTableBody');
+            if (!tbody) return;
             tbody.innerHTML = '';
 
             if (matchedStaff.length === 0) {

@@ -167,13 +167,13 @@
 
         .top-metrics-grid {
             display: grid;
-            grid-template-columns: repeat(8, 1fr);
-            gap: 8px;
+            grid-template-columns: repeat(9, 1fr);
+            gap: 6px;
         }
 
         .card {
             background-color: var(--card-bg);
-            padding: 10px 12px;
+            padding: 10px 10px;
             border-radius: 8px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.06);
             display: flex;
@@ -183,12 +183,12 @@
 
         .card h3 {
             margin: 0 0 4px 0;
-            font-size: 11px;
+            font-size: 10px;
             color: var(--text-gray);
         }
 
         .card .number {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
             color: var(--primary-red);
             margin: 0;
@@ -198,6 +198,7 @@
         .number-resigned { color: #dc3545 !important; }
         .number-pending { color: #e65100 !important; }
         .number-hired { color: #1967d2 !important; }
+        .number-start-today { color: #00796b !important; }
 
         .recruiter-sublist {
             margin-top: 4px;
@@ -211,7 +212,7 @@
         .recruiter-sub-item {
             display: flex;
             justify-content: space-between;
-            font-size: 11px;
+            font-size: 10px;
             color: #333;
         }
 
@@ -500,7 +501,7 @@
         </div>
     </div>
 
-    <!-- Top Metrics Cards Row (8 Cards) -->
+    <!-- Top Metrics Cards Row (9 Cards) -->
     <div class="top-metrics-grid">
         <div class="card">
             <h3>ยอด POD สะสม (Total POD)</h3>
@@ -529,6 +530,10 @@
         <div class="card">
             <h3 id="absentTitle">ขาด / ลา</h3>
             <p class="number number-resigned" id="valAbsent">0 คน</p>
+        </div>
+        <div class="card">
+            <h3 id="startTodayTitle">เริ่มงานวันนี้</h3>
+            <p class="number number-start-today" id="valStartToday">0 คน</p>
         </div>
         <div class="card">
             <h3 id="todayRecruiterTitle">พนักงานที่สรรหาได้</h3>
@@ -616,7 +621,7 @@
             return s;
         }
 
-        // ฟังก์ชันบวกเพิ่ม 1 วัน (T+1)
+        // ฟังก์ชันบวกเพิ่ม 1 วันตรงๆ ตามปฏิทิน (T+1)
         function addOneDay(dateStr) {
             if (!dateStr) return "";
             let parts = dateStr.split('-');
@@ -782,23 +787,23 @@
             if (!dateStr) return;
             let cleanDateStr = String(dateStr).trim().substring(0, 10);
             
-            // คำนวณวันที่ T+1 จากวันที่ในตาราง/กราฟ POD ที่เลือก
+            // คำนวณวันถัดไป T+1 ตามปฏิทินจริงตรงๆ
             let tPlusOneDate = addOneDay(cleanDateStr);
 
             document.getElementById('attendanceTitle').innerText = `มาทำงาน (${cleanDateStr})`;
             document.getElementById('absentTitle').innerText = `ขาด / ลา (${cleanDateStr})`;
             document.getElementById('detailTitle').innerText = `รายละเอียดพนักงานมาทำงานประจำวันที่ ${cleanDateStr}`;
             
-            // ปรับหัวข้อการ์ดและวันที่ให้เป็น T+1 อย่างถูกต้องชัดเจน
+            document.getElementById('startTodayTitle').innerText = `เริ่มงานวันนี้ (T+1: ${tPlusOneDate})`;
             document.getElementById('todayRecruiterTitle').innerText = `พนักงานที่สรรหาได้ (T+1: ${tPlusOneDate})`;
 
-            // รายละเอียดพนักงานมาทำงานประจำวัน (จาก Daily_Staff)
             let matchedStaff = globalData.staffList.filter(s => s.normalizedDate === cleanDateStr);
             document.getElementById('valAttendance').innerText = matchedStaff.length + " คน";
 
-            // การ์ดขวาสุด: ดึงข้อมูลการสรรหา (จาก hiresList) ที่มีวันที่สรรหาตรงกับ T+1
+            // ดึงข้อมูลพนักงานที่สรรหาได้ในวัน T+1
             let matchedHires = globalData.hiresList ? globalData.hiresList.filter(h => h.normalizedHireDate === tPlusOneDate) : [];
             document.getElementById('valTodayHired').innerText = matchedHires.length + " คน";
+            document.getElementById('valStartToday').innerText = matchedHires.length + " คน";
 
             let sublistToday = document.getElementById('sidebarRecruiterToday');
             sublistToday.innerHTML = '';

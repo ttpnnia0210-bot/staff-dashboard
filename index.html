@@ -596,6 +596,7 @@
         let allAvailableDates = [];
         let currentSelectedDate = "";
 
+        // ฟังก์ชันแปลงรูปแบบวันที่ รองรับทั้งเครื่องหมาย / , . และ -
         function parseSheetDate(dateStr) {
             if (!dateStr) return "";
             let s = String(dateStr).trim().split('T')[0].split(' ')[0];

@@ -132,67 +132,14 @@
             background-color: #ffffff;
         }
 
-        /* Metrics Summary Row (Top Grid) */
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 12px;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            padding: 12px 16px;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .card h3 {
-            margin: 0 0 4px 0;
-            font-size: 12px;
-            color: var(--text-gray);
-        }
-
-        .card .number {
-            font-size: 20px;
-            font-weight: bold;
-            color: var(--primary-red);
-            margin: 0;
-        }
-
-        .number-active { color: #28a745 !important; }
-        .number-resigned { color: #dc3545 !important; }
-        .number-hired { color: #1967d2 !important; }
-
-        .recruiter-sublist {
-            margin-top: 6px;
-            border-top: 1px solid #f0f0f0;
-            padding-top: 6px;
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-        }
-
-        .recruiter-sub-item {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: #333;
-        }
-
-        .recruiter-sub-item span:last-child {
-            font-weight: bold;
-            color: var(--primary-red);
-        }
-
-        /* Full Width Chart Section */
+        /* Full Width Chart Section (Top) */
         .chart-section {
             background-color: var(--card-bg);
             padding: 16px 20px;
             border-radius: 8px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .chart-header-flex {
@@ -314,10 +261,79 @@
             white-space: nowrap;
         }
 
-        /* Detail & Recruiter Section */
-        .bottom-section-grid {
+        /* Main Dashboard Grid (Sidebar Left, Content Right) */
+        .dashboard-grid {
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: 280px 1fr;
+            gap: 12px;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--primary-red);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+            margin-top: 4px;
+            border-left: 4px solid var(--primary-red);
+            padding-left: 6px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 10px 14px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+
+        .card h3 {
+            margin: 0 0 3px 0;
+            font-size: 13px;
+            color: var(--text-gray);
+        }
+
+        .card .number {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary-red);
+            margin: 0;
+        }
+
+        .number-active { color: #28a745 !important; }
+        .number-resigned { color: #dc3545 !important; }
+        .number-hired { color: #1967d2 !important; }
+
+        .recruiter-sublist {
+            margin-top: 6px;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .recruiter-sub-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .recruiter-sub-item span:last-child {
+            font-weight: bold;
+            color: var(--primary-red);
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
             gap: 12px;
         }
 
@@ -464,39 +480,7 @@
         </div>
     </div>
 
-    <div class="metrics-grid">
-        <div class="card">
-            <h3>ยอด POD สะสม (Total POD)</h3>
-            <p class="number" id="valTotalPod">0</p>
-        </div>
-        <div class="card">
-            <h3>พนักงานยังทำงานอยู่ (Active)</h3>
-            <p class="number number-active" id="valActive">0 คน</p>
-        </div>
-        <div class="card">
-            <h3>พนักงานลาออกแล้ว (Resigned)</h3>
-            <p class="number number-resigned" id="valResigned">0 คน</p>
-        </div>
-        <div class="card">
-            <h3>ยอดรวมพนักงานทั้งหมด</h3>
-            <p class="number" style="color: #1967d2;" id="valTotalRecruited">0 คน</p>
-            <div class="recruiter-sublist" id="sidebarRecruiterCumulative"></div>
-        </div>
-        <div class="card">
-            <h3>มาทำงาน (Attendance)</h3>
-            <p class="number number-active" id="valAttendance">0 คน</p>
-        </div>
-        <div class="card">
-            <h3>ขาด / ลา (Absent/Leave)</h3>
-            <p class="number number-resigned" id="valAbsent">0 คน</p>
-        </div>
-        <div class="card">
-            <h3 id="todayRecruiterTitle">สรรหาได้วันที่</h3>
-            <p class="number number-hired" id="valTodayHired">0 คน</p>
-            <div class="recruiter-sublist" id="sidebarRecruiterToday"></div>
-        </div>
-    </div>
-
+    <!-- 1. Full Width Chart at Top -->
     <div class="chart-section">
         <div class="chart-header-flex">
             <h2 id="chartTitleText">กราฟเปรียบเทียบยอด POD และจำนวนพนักงานมาทำงานรายวัน</h2>
@@ -515,31 +499,72 @@
         <div class="bar-chart-container" id="chartContainer"></div>
     </div>
 
-    <div class="bottom-section-grid">
-        <div class="detail-box" id="detailBox">
-            <h3 id="detailTitle">รายละเอียดพนักงานประจำวัน</h3>
-            <table class="detail-table">
-                <thead>
-                    <tr>
-                        <th>รหัสพนักงาน</th>
-                        <th>ผู้จัดการสรรหา</th>
-                        <th>Area</th>
-                        <th>Station</th>
-                        <th>Type</th>
-                        <th>ชื่อพนักงาน</th>
-                        <th>ผู้สรรหา</th>
-                        <th>สถานะ</th>
-                        <th>POD</th>
-                    </tr>
-                </thead>
-                <tbody id="detailTableBody"></tbody>
-            </table>
+    <!-- 2. Dashboard Grid: Sidebar (Left) & Main Content (Right) -->
+    <div class="dashboard-grid">
+        
+        <div class="sidebar">
+            <div class="section-title">ข้อมูลสะสม (Cumulative)</div>
+            <div class="card">
+                <h3>ยอด POD สะสม (Total POD)</h3>
+                <p class="number" id="valTotalPod">0</p>
+            </div>
+            <div class="card">
+                <h3>พนักงานยังทำงานอยู่ (Active)</h3>
+                <p class="number number-active" id="valActive">0 คน</p>
+            </div>
+            <div class="card">
+                <h3>พนักงานลาออกแล้ว (Resigned)</h3>
+                <p class="number number-resigned" id="valResigned">0 คน</p>
+            </div>
+            <div class="card">
+                <h3>ยอดรวมพนักงานทั้งหมด</h3>
+                <p class="number" style="color: #1967d2;" id="valTotalRecruited">0 คน</p>
+                <div class="recruiter-sublist" id="sidebarRecruiterCumulative"></div>
+            </div>
+
+            <div class="section-title">สรุป ณ วันที่เลือก (Selected Date)</div>
+            <div class="card">
+                <h3>มาทำงาน (Attendance)</h3>
+                <p class="number number-active" id="valAttendance">0 คน</p>
+            </div>
+            <div class="card">
+                <h3>ขาด / ลา (Absent/Leave)</h3>
+                <p class="number number-resigned" id="valAbsent">0 คน</p>
+            </div>
+            <div class="card">
+                <h3 id="todayRecruiterTitle">สรรหาได้วันที่</h3>
+                <p class="number number-hired" id="valTodayHired">0 คน</p>
+                <div class="recruiter-sublist" id="sidebarRecruiterToday"></div>
+            </div>
         </div>
 
-        <div class="recruiter-section">
-            <h2>รายงานผู้สรรหา (สะสม) และเงื่อนไขเงินรางวัล (จัดส่งครบ 500 ชิ้นขึ้นไป)</h2>
-            <div class="recruiter-grid" id="recruiterGrid"></div>
+        <div class="main-content">
+            <div class="detail-box" id="detailBox">
+                <h3 id="detailTitle">รายละเอียดพนักงานประจำวัน</h3>
+                <table class="detail-table">
+                    <thead>
+                        <tr>
+                            <th>รหัสพนักงาน</th>
+                            <th>ผู้จัดการสรรหา</th>
+                            <th>Area</th>
+                            <th>Station</th>
+                            <th>Type</th>
+                            <th>ชื่อพนักงาน</th>
+                            <th>ผู้สรรหา</th>
+                            <th>สถานะ</th>
+                            <th>POD</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detailTableBody"></tbody>
+                </table>
+            </div>
+
+            <div class="recruiter-section">
+                <h2>รายงานผู้สรรหา (สะสม) และเงื่อนไขเงินรางวัล (จัดส่งครบ 500 ชิ้นขึ้นไป)</h2>
+                <div class="recruiter-grid" id="recruiterGrid"></div>
+            </div>
         </div>
+
     </div>
 
     <script>

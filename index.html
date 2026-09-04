@@ -132,7 +132,7 @@
             background-color: #ffffff;
         }
 
-        /* Full Width Chart Section (Top) */
+        /* Top Full Width Chart Section */
         .chart-section {
             background-color: var(--card-bg);
             padding: 16px 20px;
@@ -261,7 +261,7 @@
             white-space: nowrap;
         }
 
-        /* Main Dashboard Grid (Sidebar Left, Content Right) */
+        /* Dashboard Grid: Sidebar (Left) & Main Content (Right) */
         .dashboard-grid {
             display: grid;
             grid-template-columns: 280px 1fr;
@@ -590,6 +590,18 @@
             return s;
         }
 
+        // ฟังก์ชันช่วยบวกเพิ่ม 1 วัน (สำหรับ T+1)
+        function addOneDay(dateStr) {
+            if (!dateStr || dateStr.length !== 10) return "";
+            let parts = dateStr.split('-').map(Number);
+            let d = new Date(parts[0], parts[1] - 1, parts[2]);
+            d.setDate(d.getDate() + 1);
+            let y = d.getFullYear();
+            let m = String(d.getMonth() + 1).padStart(2, '0');
+            let day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        }
+
         async function loadDashboardData() {
             try {
                 let response = await fetch(WEB_APP_URL);
@@ -598,8 +610,11 @@
                 globalData.staffList.forEach(s => {
                     s.normalizedDate = parseSheetDate(s.date);
                 });
+                
+                // ใช้หลักการ T+1: นำวันที่สรรหาในชีต บวกเพิ่มไป 1 วัน
                 globalData.newHiresList.forEach(h => {
-                    h.normalizedStartDate = parseSheetDate(h.startDate);
+                    let rawStart = parseSheetDate(h.startDate);
+                    h.normalizedStartDate = addOneDay(rawStart);
                 });
 
                 renderDashboard(globalData);
@@ -727,6 +742,7 @@
             let matchedStaff = globalData.staffList.filter(s => s.normalizedDate === cleanDateStr);
             document.getElementById('valAttendance').innerText = matchedStaff.length + " คน";
 
+            // ข้อมูลสรรหาถูกเลื่อนเป็น T+1 เรียบร้อยแล้ว
             let newHiresToday = globalData.newHiresList.filter(h => h.normalizedStartDate === cleanDateStr);
             document.getElementById('valTodayHired').innerText = newHiresToday.length + " คน";
 

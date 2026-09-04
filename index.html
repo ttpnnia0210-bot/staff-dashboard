@@ -500,6 +500,7 @@
         </div>
     </div>
 
+    <!-- Top Metrics Cards Row (8 Cards) -->
     <div class="top-metrics-grid">
         <div class="card">
             <h3>ยอด POD สะสม (Total POD)</h3>
@@ -536,6 +537,7 @@
         </div>
     </div>
 
+    <!-- Full Width Chart Section -->
     <div class="chart-section">
         <div class="chart-header-flex">
             <h2 id="chartTitleText">กราฟเปรียบเทียบยอด POD และจำนวนพนักงานมาทำงานรายวัน</h2>
@@ -554,6 +556,7 @@
         <div class="bar-chart-container" id="chartContainer"></div>
     </div>
 
+    <!-- Bottom Section -->
     <div class="bottom-section">
         <div class="detail-box" id="detailBox">
             <h3 id="detailTitle">รายละเอียดพนักงานมาทำงานประจำวัน</h3>
@@ -582,7 +585,7 @@
     </div>
 
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzdrxR1EDDDxgZmTWv8MJsUTunVYpPdUouk3gmFFPHUmFbezAn1PHxGleNXVhWSbWUF/exec";
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz_xsk10_qBflVyK69hMaRmywUqwDfrU-2XllZoMC46H28IFvlbIHqikgt0nZ4YlkAo5A/exec";
 
         let globalData = null;
         let allAvailableDates = [];
@@ -771,11 +774,9 @@
             document.getElementById('detailTitle').innerText = `รายละเอียดพนักงานมาทำงานประจำวันที่ ${cleanDateStr}`;
             document.getElementById('todayRecruiterTitle').innerText = `พนักงานที่สรรหาได้ (${cleanDateStr})`;
 
-            // รายละเอียดพนักงานมาทำงานประจำวัน (จาก Daily_Staff)
             let matchedStaff = globalData.staffList.filter(s => s.normalizedDate === cleanDateStr);
             document.getElementById('valAttendance').innerText = matchedStaff.length + " คน";
 
-            // การ์ดขวาสุด: ดึงข้อมูลพนักงานที่สรรหาได้จากหน้า "สถานะพนักงาน" (hiresList) ที่มีวันที่สรรหา (คอลัมน์ L) ตรงกับวันที่เลือก
             let matchedHires = globalData.hiresList ? globalData.hiresList.filter(h => h.normalizedHireDate === cleanDateStr) : [];
             document.getElementById('valTodayHired').innerText = matchedHires.length + " คน";
 

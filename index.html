@@ -37,6 +37,8 @@
             align-items: center;
             border-radius: 8px;
             margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .header-left {
@@ -98,16 +100,23 @@
 
         .header h1 {
             margin: 0;
-            font-size: 22px;
+            font-size: 20px;
+        }
+
+        .filter-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 6px 12px;
+            border-radius: 6px;
+            flex-wrap: wrap;
         }
 
         .filter-box {
             display: flex;
             align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.15);
-            padding: 4px 10px;
-            border-radius: 6px;
+            gap: 6px;
         }
 
         .filter-box label {
@@ -116,7 +125,7 @@
         }
 
         .filter-box input[type="date"] {
-            padding: 5px 10px;
+            padding: 4px 8px;
             border-radius: 4px;
             border: none;
             font-size: 13px;
@@ -220,7 +229,7 @@
 
         .chart-section h2 {
             margin: 0;
-            font-size: 16px;
+            font-size: 15px;
             color: var(--text-dark);
         }
 
@@ -458,9 +467,15 @@
             </div>
             <h1>Daily Staff Delivery Report</h1>
         </div>
-        <div class="filter-box">
-            <label for="datePicker">เลือกวันที่:</label>
-            <input type="date" id="datePicker" onchange="onDateSelected(this.value)">
+        <div class="filter-container">
+            <div class="filter-box">
+                <label for="startDatePicker">จากวันที่:</label>
+                <input type="date" id="startDatePicker" onchange="onDateRangeChanged()">
+            </div>
+            <div class="filter-box">
+                <label for="endDatePicker">ถึงวันที่:</label>
+                <input type="date" id="endDatePicker" onchange="onDateRangeChanged()">
+            </div>
         </div>
     </div>
 
@@ -518,7 +533,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="chart-hint">* คลิกที่แท่งกราฟ หรือเลือกจากปฏิทินด้านบน เพื่อดูรายละเอียดพนักงานรายวัน</div>
+                <div class="chart-hint">* คลิกที่แท่งกราฟเพื่อดูรายละเอียดพนักงานรายวัน (สามารถเลือกช่วงวันที่ด้านบนเพื่อกรองกราฟได้)</div>
                 <div class="bar-chart-container" id="chartContainer"></div>
             </div>
 
@@ -556,8 +571,8 @@
 
         let globalData = null;
         let allAvailableDates = [];
+        let currentSelectedDate = "";
 
-        // ฟังก์ชันแปลงวันที่จาก Google Sheets (เช่น 8/8/2026 หรือ 2026-08-08) ให้เป็น YYYY-MM-DD มาตรฐานเพื่อเรียงลำดับถูกต้อง
         function parseSheetDate(dateStr) {
             if (!dateStr) return "";
             let s = String(dateStr).trim().split('T')[0].split(' ')[0];
@@ -579,7 +594,6 @@
                 let response = await fetch(WEB_APP_URL);
                 globalData = await response.json();
                 
-                // จัดการ normalize วันที่ในข้อมูลทั้งหมดให้เป็นรูปแบบเดียวกัน
                 globalData.staffList.forEach(s => {
                     s.normalizedDate = parseSheetDate(s.date);
                 });
@@ -620,30 +634,51 @@
                 sublistCum.innerHTML += `<div class="recruiter-sub-item"><span>${rec.name}</span><span>${rec.total} คน</span></div>`;
             });
 
-            // รวบรวมวันที่ทั้งหมดและเรียงลำดับตามเวลาจริงแบบสากล
             let rawDates = data.staffList.map(s => s.normalizedDate).filter(d => d && d.length === 10);
             allAvailableDates = [...new Set(rawDates)].sort();
 
-            let targetDate = "2026-09-01"; 
             if (allAvailableDates.length > 0) {
-                targetDate = allAvailableDates[allAvailableDates.length - 1]; 
+                // ค่าเริ่มต้น: แสดงย้อนหลัง 30 วันล่าสุด หรือทั้งหมดที่มี
+                let endDate = allAvailableDates[allAvailableDates.length - 1];
+                let startIndex = Math.max(0, allAvailableDates.length - 30);
+                let startDate = allAvailableDates[startIndex];
+
+                document.getElementById('startDatePicker').value = startDate;
+                document.getElementById('endDatePicker').value = endDate;
+                currentSelectedDate = endDate;
             }
 
-            document.getElementById('datePicker').value = targetDate;
-            renderChart(targetDate);
-            showDetailByDate(targetDate);
+            updateView();
         }
 
-        function renderChart(selectedDateStr) {
+        function onDateRangeChanged() {
+            updateView();
+        }
+
+        function updateView() {
+            let startInput = document.getElementById('startDatePicker').value;
+            let endInput = document.getElementById('endDatePicker').value;
+
+            renderChart(startInput, endInput, currentSelectedDate);
+            showDetailByDate(currentSelectedDate);
+        }
+
+        function renderChart(startDate, endDate, selectedDateStr) {
             let chartContainer = document.getElementById('chartContainer');
             chartContainer.innerHTML = '';
 
-            if (allAvailableDates.length === 0) {
-                chartContainer.innerHTML = '<div style="padding: 20px; color: #777; text-align: center; width: 100%;">ไม่พบข้อมูลวันที่ในระบบ</div>';
+            let filteredDates = allAvailableDates.filter(d => {
+                if (startDate && d < startDate) return false;
+                if (endDate && d > endDate) return false;
+                return true;
+            });
+
+            if (filteredDates.length === 0) {
+                chartContainer.innerHTML = '<div style="padding: 20px; color: #777; text-align: center; width: 100%;">ไม่พบข้อมูลในช่วงวันที่เลือก</div>';
                 return;
             }
 
-            allAvailableDates.forEach(dateStr => {
+            filteredDates.forEach(dateStr => {
                 let dayStaffs = globalData.staffList.filter(s => s.normalizedDate === dateStr);
                 let totalPod = dayStaffs.reduce((sum, s) => sum + Number(s.pod), 0);
                 let attCount = dayStaffs.length;
@@ -676,17 +711,15 @@
         }
 
         function onChartClick(dateStr) {
-            document.getElementById('datePicker').value = dateStr;
-            renderChart(dateStr);
-            showDetailByDate(dateStr);
-        }
-
-        function onDateSelected(dateStr) {
-            renderChart(dateStr);
-            showDetailByDate(dateStr);
+            currentSelectedDate = dateStr;
+            let startInput = document.getElementById('startDatePicker').value;
+            let endInput = document.getElementById('endDatePicker').value;
+            renderChart(startInput, endInput, currentSelectedDate);
+            showDetailByDate(currentSelectedDate);
         }
 
         function showDetailByDate(dateStr) {
+            if (!dateStr) return;
             let cleanDateStr = String(dateStr).trim().substring(0, 10);
             document.getElementById('detailTitle').innerText = `รายละเอียดพนักงานประจำวันที่ ${cleanDateStr}`;
             document.getElementById('todayRecruiterTitle').innerText = `สรรหาได้วันที่ (${cleanDateStr})`;

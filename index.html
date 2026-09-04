@@ -20,25 +20,23 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
             margin: 0;
-            padding: 14px 20px;
+            padding: 12px 16px;
             color: var(--text-dark);
             min-height: 100vh;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
+            gap: 10px;
         }
 
         .header {
             background-color: var(--primary-red);
             color: white;
-            padding: 10px 22px;
+            padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-radius: 8px;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-            gap: 10px;
         }
 
         .header-left {
@@ -48,8 +46,8 @@
         }
 
         .logo-box {
-            width: 44px;
-            height: 44px;
+            width: 40px;
+            height: 40px;
             background: #ffffff;
             border-radius: 50%;
             display: flex;
@@ -61,8 +59,8 @@
         }
 
         .logo-emblem {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             position: relative;
             display: flex;
             align-items: center;
@@ -72,19 +70,19 @@
         .logo-yellow-part {
             position: absolute;
             left: 0;
-            width: 16px;
-            height: 32px;
+            width: 14px;
+            height: 28px;
             background-color: #f4b41a;
-            border-radius: 16px 0 0 16px;
+            border-radius: 14px 0 0 14px;
         }
 
         .logo-red-part {
             position: absolute;
             right: 0;
-            width: 24px;
-            height: 32px;
+            width: 18px;
+            height: 28px;
             background-color: #e61f26;
-            border-radius: 0 16px 16px 0;
+            border-radius: 0 14px 14px 0;
         }
 
         .logo-text-ht {
@@ -92,7 +90,7 @@
             z-index: 2;
             color: #ffffff;
             font-weight: 900;
-            font-size: 16px;
+            font-size: 14px;
             font-style: italic;
             letter-spacing: -1px;
             line-height: 1;
@@ -100,7 +98,7 @@
 
         .header h1 {
             margin: 0;
-            font-size: 20px;
+            font-size: 18px;
         }
 
         .filter-container {
@@ -108,9 +106,8 @@
             align-items: center;
             gap: 10px;
             background: rgba(255, 255, 255, 0.15);
-            padding: 6px 12px;
+            padding: 4px 10px;
             border-radius: 6px;
-            flex-wrap: wrap;
         }
 
         .filter-box {
@@ -120,102 +117,29 @@
         }
 
         .filter-box label {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
         }
 
         .filter-box input[type="date"] {
-            padding: 4px 8px;
+            padding: 3px 6px;
             border-radius: 4px;
             border: none;
-            font-size: 13px;
+            font-size: 12px;
             cursor: pointer;
             font-family: inherit;
             color: var(--text-dark);
             background-color: #ffffff;
         }
 
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 310px 1fr;
-            gap: 12px;
-            flex-grow: 1;
-        }
-
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .section-title {
-            font-size: 12px;
-            font-weight: bold;
-            color: var(--primary-red);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 2px;
-            margin-top: 4px;
-            border-left: 4px solid var(--primary-red);
-            padding-left: 6px;
-        }
-
-        .card {
+        /* Full Width Chart Section */
+        .top-chart-section {
             background-color: var(--card-bg);
-            padding: 10px 14px;
+            padding: 12px 18px;
             border-radius: 8px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-        }
-
-        .card h3 {
-            margin: 0 0 3px 0;
-            font-size: 13px;
-            color: var(--text-gray);
-        }
-
-        .card .number {
-            font-size: 20px;
-            font-weight: bold;
-            color: var(--primary-red);
-            margin: 0;
-        }
-
-        .number-active { color: #28a745 !important; }
-        .number-resigned { color: #dc3545 !important; }
-        .number-hired { color: #1967d2 !important; }
-
-        .recruiter-sublist {
-            margin-top: 6px;
-            border-top: 1px solid #f0f0f0;
-            padding-top: 6px;
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-        }
-
-        .recruiter-sub-item {
-            display: flex;
-            justify-content: space-between;
-            font-size: 13px;
-            color: #333;
-        }
-
-        .recruiter-sub-item span:last-child {
-            font-weight: bold;
-            color: var(--primary-red);
-        }
-
-        .main-content {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .chart-section {
-            background-color: var(--card-bg);
-            padding: 14px 18px;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .chart-header-flex {
@@ -223,11 +147,11 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--bg-color);
-            padding-bottom: 6px;
+            padding-bottom: 4px;
             margin-bottom: 4px;
         }
 
-        .chart-section h2 {
+        .top-chart-section h2 {
             margin: 0;
             font-size: 15px;
             color: var(--text-dark);
@@ -254,7 +178,7 @@
         .chart-hint {
             font-size: 11px;
             color: #777;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             font-style: italic;
         }
 
@@ -262,18 +186,19 @@
             display: flex;
             align-items: flex-end;
             justify-content: flex-start;
-            height: 200px;
-            padding: 5px 5px 0 5px;
+            height: 180px;
+            padding: 5px 0 0 0;
             border-bottom: 2px solid #ddd;
             overflow-x: auto;
-            gap: 6px;
+            gap: 8px;
+            width: 100%;
         }
 
         .chart-column {
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-width: 32px;
+            min-width: 35px;
             height: 100%;
             justify-content: flex-end;
             cursor: pointer;
@@ -294,7 +219,7 @@
         .bars-group {
             display: flex;
             align-items: flex-end;
-            gap: 3px;
+            gap: 4px;
             height: 100%;
             justify-content: flex-end;
         }
@@ -336,29 +261,104 @@
             white-space: nowrap;
         }
 
+        /* Bottom Grid Layout */
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 10px;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-title {
+            font-size: 11px;
+            font-weight: bold;
+            color: var(--primary-red);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+            border-left: 4px solid var(--primary-red);
+            padding-left: 6px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 8px 12px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+
+        .card h3 {
+            margin: 0 0 2px 0;
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+
+        .card .number {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary-red);
+            margin: 0;
+        }
+
+        .number-active { color: #28a745 !important; }
+        .number-resigned { color: #dc3545 !important; }
+        .number-hired { color: #1967d2 !important; }
+
+        .recruiter-sublist {
+            margin-top: 4px;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .recruiter-sub-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .recruiter-sub-item span:last-child {
+            font-weight: bold;
+            color: var(--primary-red);
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
         .detail-box {
             background-color: var(--card-bg);
-            padding: 14px 18px;
+            padding: 12px 16px;
             border-radius: 8px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.06);
         }
 
         .detail-box h3 {
-            margin: 0 0 8px 0;
-            font-size: 15px;
+            margin: 0 0 6px 0;
+            font-size: 14px;
             color: var(--primary-red);
             border-bottom: 1px solid var(--bg-color);
-            padding-bottom: 6px;
+            padding-bottom: 4px;
         }
 
         .detail-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 13px;
+            font-size: 12px;
         }
 
         .detail-table th, .detail-table td {
-            padding: 8px 6px;
+            padding: 6px 4px;
             border-bottom: 1px solid #eee;
             text-align: center;
         }
@@ -372,7 +372,7 @@
         .badge-active {
             background-color: #e6f4ea;
             color: #137333;
-            padding: 3px 8px;
+            padding: 2px 6px;
             border-radius: 4px;
             font-weight: 500;
             display: inline-block;
@@ -381,7 +381,7 @@
         .badge-resigned {
             background-color: #fce8e6;
             color: #c5221f;
-            padding: 3px 8px;
+            padding: 2px 6px;
             border-radius: 4px;
             font-weight: 500;
             display: inline-block;
@@ -389,39 +389,39 @@
 
         .recruiter-section {
             background-color: var(--card-bg);
-            padding: 14px 18px;
+            padding: 12px 16px;
             border-radius: 8px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.06);
         }
 
         .recruiter-section h2 {
-            margin: 0 0 10px 0;
-            font-size: 15px;
+            margin: 0 0 8px 0;
+            font-size: 14px;
             color: var(--text-dark);
             border-bottom: 1px solid var(--bg-color);
-            padding-bottom: 6px;
+            padding-bottom: 4px;
         }
 
         .recruiter-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 14px;
+            gap: 10px;
         }
 
         .recruiter-card-item {
             background-color: #fafafa;
             border: 1px solid #eee;
             border-radius: 6px;
-            padding: 10px 14px;
+            padding: 8px 12px;
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 4px;
         }
 
         .recruiter-name-flex {
             display: flex;
             justify-content: space-between;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
             color: var(--text-dark);
         }
@@ -429,7 +429,7 @@
         .recruiter-stat-row {
             display: flex;
             justify-content: space-between;
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-gray);
         }
 
@@ -441,16 +441,16 @@
         .bar-container {
             flex-grow: 1;
             background-color: #e5e5e5;
-            height: 8px;
-            border-radius: 4px;
-            margin: 4px 0;
+            height: 6px;
+            border-radius: 3px;
+            margin: 2px 0;
             overflow: hidden;
         }
 
         .bar-fill {
             background-color: var(--recruiter-bar);
             height: 100%;
-            border-radius: 4px;
+            border-radius: 3px;
         }
     </style>
 </head>
@@ -479,7 +479,27 @@
         </div>
     </div>
 
-    <div class="dashboard-grid">
+    <!-- Full Width Chart at Top -->
+    <div class="top-chart-section">
+        <div class="chart-header-flex">
+            <h2 id="chartTitleText">กราฟเปรียบเทียบยอด POD และจำนวนพนักงานมาทำงานรายวัน</h2>
+            <div class="chart-legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: var(--chart-bar-pod);"></div>
+                    <span>ยอด POD (เหลือง)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: var(--chart-bar-att);"></div>
+                    <span>พนักงานมาทำงาน (แดง)</span>
+                </div>
+            </div>
+        </div>
+        <div class="chart-hint">* คลิกที่แท่งกราฟเพื่อดูรายละเอียดพนักงานรายวัน (สามารถเลือกช่วงวันที่ด้านบนเพื่อกรองกราฟได้)</div>
+        <div class="bar-chart-container" id="chartContainer"></div>
+    </div>
+
+    <!-- Bottom Layout (Sidebar & Main Content) -->
+    <div class="bottom-grid">
         
         <div class="sidebar">
             <div class="section-title">ข้อมูลสะสม (Cumulative)</div>
@@ -518,25 +538,6 @@
         </div>
 
         <div class="main-content">
-            
-            <div class="chart-section">
-                <div class="chart-header-flex">
-                    <h2 id="chartTitleText">กราฟเปรียบเทียบยอด POD และจำนวนพนักงานมาทำงานรายวัน</h2>
-                    <div class="chart-legend">
-                        <div class="legend-item">
-                            <div class="legend-color" style="background-color: var(--chart-bar-pod);"></div>
-                            <span>ยอด POD (เหลือง)</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background-color: var(--chart-bar-att);"></div>
-                            <span>พนักงานมาทำงาน (แดง)</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="chart-hint">* คลิกที่แท่งกราฟเพื่อดูรายละเอียดพนักงานรายวัน (สามารถเลือกช่วงวันที่ด้านบนเพื่อกรองกราฟได้)</div>
-                <div class="bar-chart-container" id="chartContainer"></div>
-            </div>
-
             <div class="detail-box" id="detailBox">
                 <h3 id="detailTitle">รายละเอียดพนักงานประจำวัน</h3>
                 <table class="detail-table">
@@ -561,7 +562,6 @@
                 <h2>รายงานผู้สรรหา (สะสม) และเงื่อนไขเงินรางวัล (จัดส่งครบ 500 ชิ้นขึ้นไป)</h2>
                 <div class="recruiter-grid" id="recruiterGrid"></div>
             </div>
-
         </div>
 
     </div>
@@ -638,7 +638,6 @@
             allAvailableDates = [...new Set(rawDates)].sort();
 
             if (allAvailableDates.length > 0) {
-                // ค่าเริ่มต้น: แสดงย้อนหลัง 30 วันล่าสุด หรือทั้งหมดที่มี
                 let endDate = allAvailableDates[allAvailableDates.length - 1];
                 let startIndex = Math.max(0, allAvailableDates.length - 30);
                 let startDate = allAvailableDates[startIndex];

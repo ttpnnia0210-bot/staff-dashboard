@@ -628,11 +628,13 @@
                 sublistCum.innerHTML += `<div class="recruiter-sub-item"><span>${rec.name}</span><span>${rec.total} คน</span></div>`;
             });
 
-            let rawDates = data.staffList.map(s => s.normalizedDate).filter(d => d && d.length === 10);
+            // กรองเอาเฉพาะวันที่ไม่ใช่อนาคต (ตัดวันที่เกินปีปัจจุบันหรือเดือนธันวาคมทิ้ง เพื่อป้องกันข้อมูลรวน)
+            let todayStr = "2026-09-04"; // วันที่ปัจจุบันตามระบบ
+            let rawDates = data.staffList.map(s => s.normalizedDate).filter(d => d && d.length === 10 && d <= todayStr);
             allAvailableDates = [...new Set(rawDates)].sort();
 
             if (allAvailableDates.length > 0) {
-                let maxDate = allAvailableDates[allAvailableDates.length - 1]; // วันล่าสุดที่มีข้อมูลจริงในชีต
+                let maxDate = allAvailableDates[allAvailableDates.length - 1]; // วันล่าสุดที่มีข้อมูลจริง (ไม่เกินวันนี้)
                 let startIndex = Math.max(0, allAvailableDates.length - 30);
                 let startDate = allAvailableDates[startIndex];
 
@@ -641,7 +643,7 @@
 
                 startPicker.value = startDate;
                 endPicker.value = maxDate;
-                endPicker.max = maxDate; // ล็อกไม่ให้เลือกเกินวันปัจจุบันที่มีข้อมูล
+                endPicker.max = maxDate; // ล็อกไม่ให้เลือกเกินวันปัจจุบันที่มีข้อมูลจริง
 
                 currentSelectedDate = maxDate;
             }
@@ -725,7 +727,6 @@
             if (!dateStr) return;
             let cleanDateStr = String(dateStr).trim().substring(0, 10);
             
-            // แก้ไขข้อความหัวข้อให้ตรงกับวันที่เลือกจริงอย่างแม่นยำ
             document.getElementById('attendanceTitle').innerText = `มาทำงาน (${cleanDateStr})`;
             document.getElementById('detailTitle').innerText = `รายละเอียดพนักงานประจำวันที่ ${cleanDateStr}`;
             document.getElementById('todayRecruiterTitle').innerText = `สรรหาได้วันที่ (${cleanDateStr})`;

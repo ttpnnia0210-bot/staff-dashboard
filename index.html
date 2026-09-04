@@ -788,6 +788,8 @@
             document.getElementById('attendanceTitle').innerText = `มาทำงาน (${cleanDateStr})`;
             document.getElementById('absentTitle').innerText = `ขาด / ลา (${cleanDateStr})`;
             document.getElementById('detailTitle').innerText = `รายละเอียดพนักงานมาทำงานประจำวันที่ ${cleanDateStr}`;
+            
+            // ปรับหัวข้อการ์ดและวันที่ให้เป็น T+1 อย่างถูกต้องชัดเจน
             document.getElementById('todayRecruiterTitle').innerText = `พนักงานที่สรรหาได้ (T+1: ${tPlusOneDate})`;
 
             // รายละเอียดพนักงานมาทำงานประจำวัน (จาก Daily_Staff)

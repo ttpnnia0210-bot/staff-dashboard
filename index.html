@@ -499,22 +499,23 @@
         </div>
     </div>
 
+    <!-- Top Metrics Cards Row (7 Cards) -->
     <div class="top-metrics-grid">
         <div class="card">
             <h3>ยอด POD สะสม (Total POD)</h3>
             <p class="number" id="valTotalPod">0</p>
         </div>
         <div class="card">
-            <h3>ยอดรวมพนักงานทั้งหมด</h3>
-            <p class="number" style="color: #1967d2;" id="valTotalRecruited">0 คน</p>
+            <h3>บันทึกข้อมูลทั้งหมด</h3>
+            <p class="number" style="color: #1967d2;" id="valTotalRecruited">0 แถว</p>
             <div class="recruiter-sublist" id="sidebarRecruiterCumulative"></div>
         </div>
         <div class="card">
-            <h3>พนักงานยังทำงานอยู่ (Active)</h3>
+            <h3>สถานะทำงานอยู่ (Active)</h3>
             <p class="number number-active" id="valActive">0 คน</p>
         </div>
         <div class="card">
-            <h3>พนักงานลาออกแล้ว (Resigned)</h3>
+            <h3>สถานะลาออก (Resigned)</h3>
             <p class="number number-resigned" id="valResigned">0 คน</p>
         </div>
         <div class="card">
@@ -526,15 +527,16 @@
             <p class="number number-resigned" id="valAbsent">0 คน</p>
         </div>
         <div class="card">
-            <h3 id="todayRecruiterTitle">สรรหาได้วันที่</h3>
-            <p class="number number-hired" id="valTodayHired">0 คน</p>
+            <h3 id="todayRecruiterTitle">ข้อมูลวันนี้</h3>
+            <p class="number number-hired" id="valTodayHired">0 รายการ</p>
             <div class="recruiter-sublist" id="sidebarRecruiterToday"></div>
         </div>
     </div>
 
+    <!-- Full Width Chart Section -->
     <div class="chart-section">
         <div class="chart-header-flex">
-            <h2 id="chartTitleText">กราฟเปรียบเทียบยอด POD และจำนวนพนักงานมาทำงานรายวัน</h2>
+            <h2 id="chartTitleText">กราฟเปรียบเทียบยอด POD และจำนวนรายการมาทำงานรายวัน</h2>
             <div class="chart-legend">
                 <div class="legend-item">
                     <div class="legend-color" style="background-color: var(--chart-bar-pod);"></div>
@@ -542,7 +544,7 @@
                 </div>
                 <div class="legend-item">
                     <div class="legend-color" style="background-color: var(--chart-bar-att);"></div>
-                    <span>พนักงานมาทำงาน (แดง)</span>
+                    <span>จำนวนรายการ (แดง)</span>
                 </div>
             </div>
         </div>
@@ -550,6 +552,7 @@
         <div class="bar-chart-container" id="chartContainer"></div>
     </div>
 
+    <!-- Bottom Section -->
     <div class="bottom-section">
         <div class="detail-box" id="detailBox">
             <h3 id="detailTitle">รายละเอียดพนักงานประจำวัน</h3>
@@ -572,7 +575,7 @@
         </div>
 
         <div class="recruiter-section">
-            <h2>รายงานผู้สรรหา (สะสม) และเงื่อนไขเงินรางวัล (จัดส่งครบ 500 ชิ้นขึ้นไป)</h2>
+            <h2>รายงานผลงานผู้สรรหา (สะสมจาก Daily_Staff) และเงื่อนไข (POD ≥ 500)</h2>
             <div class="recruiter-grid" id="recruiterGrid"></div>
         </div>
     </div>
@@ -613,10 +616,6 @@
                 globalData.staffList.forEach(s => {
                     s.normalizedDate = parseSheetDate(s.date);
                 });
-                
-                globalData.newHiresList.forEach(h => {
-                    h.normalizedStartDate = parseSheetDate(h.startDate);
-                });
 
                 renderDashboard(globalData);
                 if (isRefresh) {
@@ -641,7 +640,7 @@
 
             document.getElementById('valActive').innerText = (data.summary.active_staff || 0) + " คน";
             document.getElementById('valResigned').innerText = (data.summary.resigned_staff || 0) + " คน";
-            document.getElementById('valTotalRecruited').innerText = (data.summary.total_recruited || 0) + " คน";
+            document.getElementById('valTotalRecruited').innerText = (data.summary.total_recruited || 0) + " แถว";
             document.getElementById('valAbsent').innerText = "0 คน";
 
             let recGrid = document.getElementById('recruiterGrid');
@@ -656,11 +655,11 @@
                     <div class="recruiter-card-item">
                         <div class="recruiter-name-flex"><span>${rec.name}</span></div>
                         <div class="bar-container"><div class="bar-fill" style="width: ${percent}%;"></div></div>
-                        <div class="recruiter-stat-row"><span>หาได้ทั้งหมด:</span><span>${rec.total} คน</span></div>
-                        <div class="recruiter-stat-row"><span>เข้าเงื่อนไข (≥500 ชิ้น):</span><span style="color: #e65100;">${rec.qualified} คน</span></div>
+                        <div class="recruiter-stat-row"><span>บันทึกทั้งหมด:</span><span>${rec.total} รายการ</span></div>
+                        <div class="recruiter-stat-row"><span>เข้าเงื่อนไข (≥500 ชิ้น):</span><span style="color: #e65100;">${rec.qualified} รายการ</span></div>
                     </div>
                 `;
-                sublistCum.innerHTML += `<div class="recruiter-sub-item"><span>${rec.name}</span><span>${rec.total} คน</span></div>`;
+                sublistCum.innerHTML += `<div class="recruiter-sub-item"><span>${rec.name}</span><span>${rec.total}</span></div>`;
             });
 
             let todayStr = "2026-09-04";
@@ -764,21 +763,21 @@
             document.getElementById('attendanceTitle').innerText = `มาทำงาน (${cleanDateStr})`;
             document.getElementById('absentTitle').innerText = `ขาด / ลา (${cleanDateStr})`;
             document.getElementById('detailTitle').innerText = `รายละเอียดพนักงานประจำวันที่ ${cleanDateStr}`;
-            document.getElementById('todayRecruiterTitle').innerText = `สรรหาได้วันที่ (${cleanDateStr})`;
+            document.getElementById('todayRecruiterTitle').innerText = `ข้อมูลวันที่ (${cleanDateStr})`;
 
             let matchedStaff = globalData.staffList.filter(s => s.normalizedDate === cleanDateStr);
             document.getElementById('valAttendance').innerText = matchedStaff.length + " คน";
-
-            let newHiresToday = globalData.newHiresList.filter(h => h.normalizedStartDate === cleanDateStr);
-            document.getElementById('valTodayHired').innerText = newHiresToday.length + " คน";
+            document.getElementById('valTodayHired').innerText = matchedStaff.length + " รายการ";
 
             let sublistToday = document.getElementById('sidebarRecruiterToday');
             sublistToday.innerHTML = '';
             
             if (globalData && globalData.recruiters) {
                 globalData.recruiters.forEach(rec => {
-                    let countToday = newHiresToday.filter(h => h.recruiter === rec.name).length;
-                    sublistToday.innerHTML += `<div class="recruiter-sub-item"><span>${rec.name}</span><span>${countToday} คน</span></div>`;
+                    let countToday = matchedStaff.filter(h => h.recruiter === rec.name).length;
+                    if (countToday > 0) {
+                        sublistToday.innerHTML += `<div class="recruiter-sub-item"><span>${rec.name}</span><span>${countToday}</span></div>`;
+                    }
                 });
             }
 

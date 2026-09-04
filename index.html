@@ -252,24 +252,25 @@
         .bar-chart-container {
             display: flex;
             align-items: flex-end;
-            justify-content: space-between;
+            justify-content: flex-start;
             height: 200px;
             padding: 5px 5px 0 5px;
             border-bottom: 2px solid #ddd;
             overflow-x: auto;
+            gap: 6px;
         }
 
         .chart-column {
             display: flex;
             flex-direction: column;
             align-items: center;
-            flex: 1;
-            min-width: 25px;
+            min-width: 32px;
             height: 100%;
             justify-content: flex-end;
             cursor: pointer;
             transition: background 0.2s;
             border-radius: 4px;
+            padding: 0 2px;
         }
 
         .chart-column:hover {
@@ -307,13 +308,13 @@
         }
 
         .chart-bar-pod {
-            width: 10px;
+            width: 12px;
             background-color: var(--chart-bar-pod);
             border-radius: 2px 2px 0 0;
         }
 
         .chart-bar-att {
-            width: 10px;
+            width: 12px;
             background-color: var(--chart-bar-att);
             border-radius: 2px 2px 0 0;
         }
@@ -505,7 +506,7 @@
             
             <div class="chart-section">
                 <div class="chart-header-flex">
-                    <h2 id="chartTitleText">กราฟเปรียบเทียบยอด POD และจำนวนพนักงานมาทำงานรายวัน (ย้อนหลัง 30 วัน)</h2>
+                    <h2 id="chartTitleText">กราฟเปรียบเทียบยอด POD และจำนวนพนักงานมาทำงานรายวัน</h2>
                     <div class="chart-legend">
                         <div class="legend-item">
                             <div class="legend-color" style="background-color: var(--chart-bar-pod);"></div>
@@ -554,12 +555,38 @@
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycby6hAq4kTwSKzPI_APokrFEXLhzLmHDUKRT68WAFPYS7ItBoB8dfgSHs_IKzjGDgTh-5A/exec";
 
         let globalData = null;
-        let availableDates = [];
+        let allAvailableDates = [];
+
+        // ฟังก์ชันแปลงวันที่จาก Google Sheets (เช่น 8/8/2026 หรือ 2026-08-08) ให้เป็น YYYY-MM-DD มาตรฐานเพื่อเรียงลำดับถูกต้อง
+        function parseSheetDate(dateStr) {
+            if (!dateStr) return "";
+            let s = String(dateStr).trim().split('T')[0].split(' ')[0];
+            if (s.includes('/')) {
+                let parts = s.split('/');
+                if (parts.length === 3) {
+                    let d = parts[0].padStart(2, '0');
+                    let m = parts[1].padStart(2, '0');
+                    let y = parts[2];
+                    if (y.length === 2) y = "20" + y;
+                    return `${y}-${m}-${d}`;
+                }
+            }
+            return s;
+        }
 
         async function loadDashboardData() {
             try {
                 let response = await fetch(WEB_APP_URL);
                 globalData = await response.json();
+                
+                // จัดการ normalize วันที่ในข้อมูลทั้งหมดให้เป็นรูปแบบเดียวกัน
+                globalData.staffList.forEach(s => {
+                    s.normalizedDate = parseSheetDate(s.date);
+                });
+                globalData.newHiresList.forEach(h => {
+                    h.normalizedStartDate = parseSheetDate(h.startDate);
+                });
+
                 renderDashboard(globalData);
             } catch (error) {
                 console.error("Error loading data from Google Sheets:", error);
@@ -593,60 +620,45 @@
                 sublistCum.innerHTML += `<div class="recruiter-sub-item"><span>${rec.name}</span><span>${rec.total} คน</span></div>`;
             });
 
-            availableDates = data.staffList.map(s => String(s.date).trim().substring(0, 10)).filter(d => d);
+            // รวบรวมวันที่ทั้งหมดและเรียงลำดับตามเวลาจริงแบบสากล
+            let rawDates = data.staffList.map(s => s.normalizedDate).filter(d => d && d.length === 10);
+            allAvailableDates = [...new Set(rawDates)].sort();
 
             let targetDate = "2026-09-01"; 
-            if (availableDates.length > 0) {
-                let sortedDates = [...new Set(availableDates)].sort();
-                targetDate = sortedDates[sortedDates.length - 1]; 
+            if (allAvailableDates.length > 0) {
+                targetDate = allAvailableDates[allAvailableDates.length - 1]; 
             }
 
             document.getElementById('datePicker').value = targetDate;
-            updateView(targetDate);
+            renderChart(targetDate);
+            showDetailByDate(targetDate);
         }
 
-        function updateView(selectedDateStr) {
-            let cleanSelectedDate = String(selectedDateStr).trim().substring(0, 10);
-            
-            let [sYear, sMonth, sDay] = cleanSelectedDate.split('-').map(Number);
-            let baseDate = new Date(sYear, sMonth - 1, sDay);
-            
-            let activeDateArray = [];
-            
-            // ขยายเวลาแสดงผลย้อนหลังเป็น 30 วัน
-            for (let i = 29; i >= 0; i--) {
-                let d = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() - i);
-                let year = d.getFullYear();
-                let month = String(d.getMonth() + 1).padStart(2, '0');
-                let day = String(d.getDate()).padStart(2, '0');
-                let dateStr = `${year}-${month}-${day}`;
-                
-                let dayNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                let displayDate = `${d.getDate()} ${dayNames[d.getMonth()]}`;
-                
-                activeDateArray.push({ dateStr: dateStr, displayDate: displayDate });
-            }
-
-            renderChart(activeDateArray, cleanSelectedDate);
-            showDetailByDate(cleanSelectedDate);
-        }
-
-        function renderChart(activeDateArray, selectedDateStr) {
+        function renderChart(selectedDateStr) {
             let chartContainer = document.getElementById('chartContainer');
             chartContainer.innerHTML = '';
 
-            activeDateArray.forEach(item => {
-                let dayStaffs = globalData.staffList.filter(s => String(s.date).trim().substring(0, 10) === item.dateStr);
+            if (allAvailableDates.length === 0) {
+                chartContainer.innerHTML = '<div style="padding: 20px; color: #777; text-align: center; width: 100%;">ไม่พบข้อมูลวันที่ในระบบ</div>';
+                return;
+            }
+
+            allAvailableDates.forEach(dateStr => {
+                let dayStaffs = globalData.staffList.filter(s => s.normalizedDate === dateStr);
                 let totalPod = dayStaffs.reduce((sum, s) => sum + Number(s.pod), 0);
                 let attCount = dayStaffs.length;
 
                 let podHeight = Math.min(Math.round((totalPod / 1000) * 100), 100);
                 let attHeight = Math.min(Math.round((attCount / 30) * 100), 100);
 
-                let isSelected = (item.dateStr === selectedDateStr) ? 'selected-column' : '';
+                let isSelected = (dateStr === selectedDateStr) ? 'selected-column' : '';
+
+                let [y, m, d] = dateStr.split('-').map(Number);
+                let dayNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                let displayDate = `${d} ${dayNames[m - 1]}`;
 
                 chartContainer.innerHTML += `
-                    <div class="chart-column ${isSelected}" onclick="onChartClick('${item.dateStr}')">
+                    <div class="chart-column ${isSelected}" onclick="onChartClick('${dateStr}')">
                         <div class="bars-group">
                             <div class="bar-wrapper">
                                 <span class="chart-value">${totalPod}</span>
@@ -657,7 +669,7 @@
                                 <div class="chart-bar-att" style="height: ${attHeight}%;"></div>
                             </div>
                         </div>
-                        <span class="chart-label">${item.displayDate}</span>
+                        <span class="chart-label">${displayDate}</span>
                     </div>
                 `;
             });
@@ -665,11 +677,13 @@
 
         function onChartClick(dateStr) {
             document.getElementById('datePicker').value = dateStr;
-            updateView(dateStr);
+            renderChart(dateStr);
+            showDetailByDate(dateStr);
         }
 
         function onDateSelected(dateStr) {
-            updateView(dateStr);
+            renderChart(dateStr);
+            showDetailByDate(dateStr);
         }
 
         function showDetailByDate(dateStr) {
@@ -677,10 +691,10 @@
             document.getElementById('detailTitle').innerText = `รายละเอียดพนักงานประจำวันที่ ${cleanDateStr}`;
             document.getElementById('todayRecruiterTitle').innerText = `สรรหาได้วันที่ (${cleanDateStr})`;
 
-            let matchedStaff = globalData.staffList.filter(s => String(s.date).trim().substring(0, 10) === cleanDateStr);
+            let matchedStaff = globalData.staffList.filter(s => s.normalizedDate === cleanDateStr);
             document.getElementById('valAttendance').innerText = matchedStaff.length + " คน";
 
-            let newHiresToday = globalData.newHiresList.filter(h => String(h.startDate).trim().substring(0, 10) === cleanDateStr);
+            let newHiresToday = globalData.newHiresList.filter(h => h.normalizedStartDate === cleanDateStr);
             document.getElementById('valTodayHired').innerText = newHiresToday.length + " คน";
 
             let sublistToday = document.getElementById('sidebarRecruiterToday');

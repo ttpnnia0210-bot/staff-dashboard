@@ -500,6 +500,7 @@
         </div>
     </div>
 
+    <!-- Top Metrics Cards Row (8 Cards) -->
     <div class="top-metrics-grid">
         <div class="card">
             <h3>ยอด POD สะสม (Total POD)</h3>
@@ -536,6 +537,7 @@
         </div>
     </div>
 
+    <!-- Full Width Chart Section -->
     <div class="chart-section">
         <div class="chart-header-flex">
             <h2 id="chartTitleText">กราฟเปรียบเทียบยอด POD และจำนวนพนักงานมาทำงานรายวัน</h2>
@@ -554,6 +556,7 @@
         <div class="bar-chart-container" id="chartContainer"></div>
     </div>
 
+    <!-- Bottom Section -->
     <div class="bottom-section">
         <div class="detail-box" id="detailBox">
             <h3 id="detailTitle">รายละเอียดพนักงานมาทำงานประจำวัน</h3>
@@ -602,6 +605,18 @@
                 }
             }
             return s;
+        }
+
+        // ฟังก์ชันช่วยบวกเพิ่ม 1 วัน (สำหรับคำนวณรอบ T+1)
+        function addOneDay(dateStr) {
+            if (!dateStr) return "";
+            let d = new Date(dateStr);
+            if (isNaN(d.getTime())) return dateStr;
+            d.setDate(d.getDate() + 1);
+            let y = d.getFullYear();
+            let m = String(d.getMonth() + 1).padStart(2, '0');
+            let day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
         }
 
         async function loadDashboardData(isRefresh = false) {
@@ -760,14 +775,17 @@
             document.getElementById('attendanceTitle').innerText = `มาทำงาน (${cleanDateStr})`;
             document.getElementById('absentTitle').innerText = `ขาด / ลา (${cleanDateStr})`;
             document.getElementById('detailTitle').innerText = `รายละเอียดพนักงานมาทำงานประจำวันที่ ${cleanDateStr}`;
-            document.getElementById('todayRecruiterTitle').innerText = `พนักงานที่สรรหาได้ (${cleanDateStr})`;
+            
+            // คำนวณวันที่ T+1 สำหรับการดึงข้อมูลพนักงานที่สรรหาได้
+            let tPlusOneDate = addOneDay(cleanDateStr);
+            document.getElementById('todayRecruiterTitle').innerText = `พนักงานที่สรรหาได้ (T+1: ${tPlusOneDate})`;
 
             // รายละเอียดพนักงานมาทำงานประจำวัน (จาก Daily_Staff)
             let matchedStaff = globalData.staffList.filter(s => s.normalizedDate === cleanDateStr);
             document.getElementById('valAttendance').innerText = matchedStaff.length + " คน";
 
-            // การ์ดขวาสุด: ดึงข้อมูลการสรรหาจากหน้า "สถานะพนักงาน" (hiresList) ตามวันที่เลือก
-            let matchedHires = globalData.hiresList ? globalData.hiresList.filter(h => h.normalizedHireDate === cleanDateStr) : [];
+            // การ์ดขวาสุด: ดึงข้อมูลการสรรหาจากหน้า "สถานะพนักงาน" (hiresList) โดยใช้วันที่แบบ T+1
+            let matchedHires = globalData.hiresList ? globalData.hiresList.filter(h => h.normalizedHireDate === tPlusOneDate) : [];
             document.getElementById('valTodayHired').innerText = matchedHires.length + " คน";
 
             let sublistToday = document.getElementById('sidebarRecruiterToday');

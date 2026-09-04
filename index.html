@@ -517,15 +517,21 @@
                 <p class="number number-resigned" id="valResigned">0 คน</p>
             </div>
             <div class="card">
-                <h3>ยอดรวมพนักงานทั้งหมด</h3>
+                <h3>พนักงานยังทำงานอยู่ (Active) หรือ ยอดรวมพนักงานทั้งหมด</h3>
                 <p class="number" style="color: #1967d2;" id="valTotalRecruited">0 คน</p>
                 <div class="recruiter-sublist" id="sidebarRecruiterCumulative"></div>
             </div>
 
-            <div class="section-title">สรุป ณ วันที่เลือก (Selected Date)</div>
+            <div class="section-title" id="selectedDateSectionTitle">สรุป ณ วันที่เลือก</div>
+            <!-- สลับตำแหน่ง: เอา "มาทำงาน" ขึ้นมาก่อน "ยอดรวมพนักงานทั้งหมด" ตามที่วงไว้ -->
             <div class="card">
-                <h3>มาทำงาน (Attendance)</h3>
+                <h3 id="attendanceTitle">มาทำงาน (Attendance)</h3>
                 <p class="number number-active" id="valAttendance">0 คน</p>
+            </div>
+            <div class="card">
+                <h3>ยอดรวมพนักงานทั้งหมด</h3>
+                <p class="number" style="color: #1967d2;" id="valTotalRecruitedAlt">0 คน</p>
+                <div class="recruiter-sublist" id="sidebarRecruiterCumulativeAlt"></div>
             </div>
             <div class="card">
                 <h3>ขาด / ลา (Absent/Leave)</h3>
@@ -590,7 +596,6 @@
             return s;
         }
 
-        // ฟังก์ชันช่วยบวกเพิ่ม 1 วัน (สำหรับ T+1)
         function addOneDay(dateStr) {
             if (!dateStr || dateStr.length !== 10) return "";
             let parts = dateStr.split('-').map(Number);
@@ -611,7 +616,6 @@
                     s.normalizedDate = parseSheetDate(s.date);
                 });
                 
-                // ใช้หลักการ T+1: นำวันที่สรรหาในชีต บวกเพิ่มไป 1 วัน
                 globalData.newHiresList.forEach(h => {
                     let rawStart = parseSheetDate(h.startDate);
                     h.normalizedStartDate = addOneDay(rawStart);
@@ -628,14 +632,20 @@
             document.getElementById('valTotalPod').innerText = Number(data.summary.total_pod || 0).toLocaleString();
             document.getElementById('valActive').innerText = (data.summary.active_staff || 0) + " คน";
             document.getElementById('valResigned').innerText = (data.summary.resigned_staff || 0) + " คน";
-            document.getElementById('valTotalRecruited').innerText = (data.summary.total_recruited || 0) + " คน";
+            
+            let totalRecruitedVal = (data.summary.total_recruited || 0) + " คน";
+            document.getElementById('valTotalRecruited').innerText = totalRecruitedVal;
+            document.getElementById('valTotalRecruitedAlt').innerText = totalRecruitedVal;
+            
             document.getElementById('valAbsent').innerText = "0 คน";
 
             let recGrid = document.getElementById('recruiterGrid');
             recGrid.innerHTML = '';
             
             let sublistCum = document.getElementById('sidebarRecruiterCumulative');
+            let sublistCumAlt = document.getElementById('sidebarRecruiterCumulativeAlt');
             sublistCum.innerHTML = '';
+            sublistCumAlt.innerHTML = '';
 
             data.recruiters.forEach(rec => {
                 let percent = Math.round((rec.qualified / (rec.total || 1)) * 100);
@@ -647,7 +657,9 @@
                         <div class="recruiter-stat-row"><span>เข้าเงื่อนไข (≥500 ชิ้น):</span><span style="color: #e65100;">${rec.qualified} คน</span></div>
                     </div>
                 `;
-                sublistCum.innerHTML += `<div class="recruiter-sub-item"><span>${rec.name}</span><span>${rec.total} คน</span></div>`;
+                let subItem = `<div class="recruiter-sub-item"><span>${rec.name}</span><span>${rec.total} คน</span></div>`;
+                sublistCum.innerHTML += subItem;
+                sublistCumAlt.innerHTML += subItem;
             });
 
             let rawDates = data.staffList.map(s => s.normalizedDate).filter(d => d && d.length === 10);
@@ -736,13 +748,15 @@
         function showDetailByDate(dateStr) {
             if (!dateStr) return;
             let cleanDateStr = String(dateStr).trim().substring(0, 10);
+            
+            document.getElementById('selectedDateSectionTitle').innerText = `สรุป ณ วันที่ ${cleanDateStr}`;
+            document.getElementById('attendanceTitle').innerText = `มาทำงาน (${cleanDateStr})`;
             document.getElementById('detailTitle').innerText = `รายละเอียดพนักงานประจำวันที่ ${cleanDateStr}`;
             document.getElementById('todayRecruiterTitle').innerText = `สรรหาได้วันที่ (${cleanDateStr})`;
 
             let matchedStaff = globalData.staffList.filter(s => s.normalizedDate === cleanDateStr);
             document.getElementById('valAttendance').innerText = matchedStaff.length + " คน";
 
-            // ข้อมูลสรรหาถูกเลื่อนเป็น T+1 เรียบร้อยแล้ว
             let newHiresToday = globalData.newHiresList.filter(h => h.normalizedStartDate === cleanDateStr);
             document.getElementById('valTodayHired').innerText = newHiresToday.length + " คน";
 

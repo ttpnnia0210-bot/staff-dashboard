@@ -132,7 +132,62 @@
             background-color: #ffffff;
         }
 
-        /* Top Full Width Chart Section */
+        /* Top Metrics Cards Row (Full Width Horizontal Grid) */
+        .top-metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 10px 14px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .card h3 {
+            margin: 0 0 4px 0;
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+
+        .card .number {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary-red);
+            margin: 0;
+        }
+
+        .number-active { color: #28a745 !important; }
+        .number-resigned { color: #dc3545 !important; }
+        .number-hired { color: #1967d2 !important; }
+
+        .recruiter-sublist {
+            margin-top: 4px;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .recruiter-sub-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #333;
+        }
+
+        .recruiter-sub-item span:last-child {
+            font-weight: bold;
+            color: var(--primary-red);
+        }
+
+        /* Full Width Chart Section */
         .chart-section {
             background-color: var(--card-bg);
             padding: 16px 20px;
@@ -261,77 +316,8 @@
             white-space: nowrap;
         }
 
-        /* Dashboard Grid: Sidebar (Left) & Main Content (Right) */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 12px;
-        }
-
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .section-title {
-            font-size: 12px;
-            font-weight: bold;
-            color: var(--primary-red);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 2px;
-            margin-top: 4px;
-            border-left: 4px solid var(--primary-red);
-            padding-left: 6px;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            padding: 10px 14px;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-        }
-
-        .card h3 {
-            margin: 0 0 3px 0;
-            font-size: 13px;
-            color: var(--text-gray);
-        }
-
-        .card .number {
-            font-size: 18px;
-            font-weight: bold;
-            color: var(--primary-red);
-            margin: 0;
-        }
-
-        .number-active { color: #28a745 !important; }
-        .number-resigned { color: #dc3545 !important; }
-        .number-hired { color: #1967d2 !important; }
-
-        .recruiter-sublist {
-            margin-top: 6px;
-            border-top: 1px solid #f0f0f0;
-            padding-top: 6px;
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-        }
-
-        .recruiter-sub-item {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: #333;
-        }
-
-        .recruiter-sub-item span:last-child {
-            font-weight: bold;
-            color: var(--primary-red);
-        }
-
-        .main-content {
+        /* Bottom Section (Table & Recruiter Report) */
+        .bottom-section {
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -480,7 +466,41 @@
         </div>
     </div>
 
-    <!-- 1. Full Width Chart at Top -->
+    <!-- Top Metrics Cards Row (Horizontal Full Width) -->
+    <div class="top-metrics-grid">
+        <div class="card">
+            <h3>ยอด POD สะสม (Total POD)</h3>
+            <p class="number" id="valTotalPod">0</p>
+        </div>
+        <div class="card">
+            <h3>พนักงานยังทำงานอยู่ (Active)</h3>
+            <p class="number number-active" id="valActive">0 คน</p>
+        </div>
+        <div class="card">
+            <h3>พนักงานลาออกแล้ว (Resigned)</h3>
+            <p class="number number-resigned" id="valResigned">0 คน</p>
+        </div>
+        <div class="card">
+            <h3>ยอดรวมพนักงานทั้งหมด</h3>
+            <p class="number" style="color: #1967d2;" id="valTotalRecruited">0 คน</p>
+            <div class="recruiter-sublist" id="sidebarRecruiterCumulative"></div>
+        </div>
+        <div class="card">
+            <h3 id="attendanceTitle">มาทำงาน (Attendance)</h3>
+            <p class="number number-active" id="valAttendance">0 คน</p>
+        </div>
+        <div class="card">
+            <h3>ขาด / ลา (Absent/Leave)</h3>
+            <p class="number number-resigned" id="valAbsent">0 คน</p>
+        </div>
+        <div class="card">
+            <h3 id="todayRecruiterTitle">สรรหาได้วันที่</h3>
+            <p class="number number-hired" id="valTodayHired">0 คน</p>
+            <div class="recruiter-sublist" id="sidebarRecruiterToday"></div>
+        </div>
+    </div>
+
+    <!-- Full Width Chart Section -->
     <div class="chart-section">
         <div class="chart-header-flex">
             <h2 id="chartTitleText">กราฟเปรียบเทียบยอด POD และจำนวนพนักงานมาทำงานรายวัน</h2>
@@ -499,78 +519,32 @@
         <div class="bar-chart-container" id="chartContainer"></div>
     </div>
 
-    <!-- 2. Dashboard Grid: Sidebar (Left) & Main Content (Right) -->
-    <div class="dashboard-grid">
-        
-        <div class="sidebar">
-            <div class="section-title">ข้อมูลสะสม (Cumulative)</div>
-            <div class="card">
-                <h3>ยอด POD สะสม (Total POD)</h3>
-                <p class="number" id="valTotalPod">0</p>
-            </div>
-            <div class="card">
-                <h3>พนักงานยังทำงานอยู่ (Active)</h3>
-                <p class="number number-active" id="valActive">0 คน</p>
-            </div>
-            <div class="card">
-                <h3>พนักงานลาออกแล้ว (Resigned)</h3>
-                <p class="number number-resigned" id="valResigned">0 คน</p>
-            </div>
-            <div class="card">
-                <h3>พนักงานยังทำงานอยู่ (Active) หรือ ยอดรวมพนักงานทั้งหมด</h3>
-                <p class="number" style="color: #1967d2;" id="valTotalRecruited">0 คน</p>
-                <div class="recruiter-sublist" id="sidebarRecruiterCumulative"></div>
-            </div>
-
-            <div class="section-title" id="selectedDateSectionTitle">สรุป ณ วันที่เลือก</div>
-            <!-- สลับตำแหน่ง: เอา "มาทำงาน" ขึ้นมาก่อน "ยอดรวมพนักงานทั้งหมด" ตามที่วงไว้ -->
-            <div class="card">
-                <h3 id="attendanceTitle">มาทำงาน (Attendance)</h3>
-                <p class="number number-active" id="valAttendance">0 คน</p>
-            </div>
-            <div class="card">
-                <h3>ยอดรวมพนักงานทั้งหมด</h3>
-                <p class="number" style="color: #1967d2;" id="valTotalRecruitedAlt">0 คน</p>
-                <div class="recruiter-sublist" id="sidebarRecruiterCumulativeAlt"></div>
-            </div>
-            <div class="card">
-                <h3>ขาด / ลา (Absent/Leave)</h3>
-                <p class="number number-resigned" id="valAbsent">0 คน</p>
-            </div>
-            <div class="card">
-                <h3 id="todayRecruiterTitle">สรรหาได้วันที่</h3>
-                <p class="number number-hired" id="valTodayHired">0 คน</p>
-                <div class="recruiter-sublist" id="sidebarRecruiterToday"></div>
-            </div>
+    <!-- Bottom Section: Detail Table & Recruiter Report -->
+    <div class="bottom-section">
+        <div class="detail-box" id="detailBox">
+            <h3 id="detailTitle">รายละเอียดพนักงานประจำวัน</h3>
+            <table class="detail-table">
+                <thead>
+                    <tr>
+                        <th>รหัสพนักงาน</th>
+                        <th>ผู้จัดการสรรหา</th>
+                        <th>Area</th>
+                        <th>Station</th>
+                        <th>Type</th>
+                        <th>ชื่อพนักงาน</th>
+                        <th>ผู้สรรหา</th>
+                        <th>สถานะ</th>
+                        <th>POD</th>
+                    </tr>
+                </thead>
+                <tbody id="detailTableBody"></tbody>
+            </table>
         </div>
 
-        <div class="main-content">
-            <div class="detail-box" id="detailBox">
-                <h3 id="detailTitle">รายละเอียดพนักงานประจำวัน</h3>
-                <table class="detail-table">
-                    <thead>
-                        <tr>
-                            <th>รหัสพนักงาน</th>
-                            <th>ผู้จัดการสรรหา</th>
-                            <th>Area</th>
-                            <th>Station</th>
-                            <th>Type</th>
-                            <th>ชื่อพนักงาน</th>
-                            <th>ผู้สรรหา</th>
-                            <th>สถานะ</th>
-                            <th>POD</th>
-                        </tr>
-                    </thead>
-                    <tbody id="detailTableBody"></tbody>
-                </table>
-            </div>
-
-            <div class="recruiter-section">
-                <h2>รายงานผู้สรรหา (สะสม) และเงื่อนไขเงินรางวัล (จัดส่งครบ 500 ชิ้นขึ้นไป)</h2>
-                <div class="recruiter-grid" id="recruiterGrid"></div>
-            </div>
+        <div class="recruiter-section">
+            <h2>รายงานผู้สรรหา (สะสม) และเงื่อนไขเงินรางวัล (จัดส่งครบ 500 ชิ้นขึ้นไป)</h2>
+            <div class="recruiter-grid" id="recruiterGrid"></div>
         </div>
-
     </div>
 
     <script>
@@ -632,20 +606,14 @@
             document.getElementById('valTotalPod').innerText = Number(data.summary.total_pod || 0).toLocaleString();
             document.getElementById('valActive').innerText = (data.summary.active_staff || 0) + " คน";
             document.getElementById('valResigned').innerText = (data.summary.resigned_staff || 0) + " คน";
-            
-            let totalRecruitedVal = (data.summary.total_recruited || 0) + " คน";
-            document.getElementById('valTotalRecruited').innerText = totalRecruitedVal;
-            document.getElementById('valTotalRecruitedAlt').innerText = totalRecruitedVal;
-            
+            document.getElementById('valTotalRecruited').innerText = (data.summary.total_recruited || 0) + " คน";
             document.getElementById('valAbsent').innerText = "0 คน";
 
             let recGrid = document.getElementById('recruiterGrid');
             recGrid.innerHTML = '';
             
             let sublistCum = document.getElementById('sidebarRecruiterCumulative');
-            let sublistCumAlt = document.getElementById('sidebarRecruiterCumulativeAlt');
             sublistCum.innerHTML = '';
-            sublistCumAlt.innerHTML = '';
 
             data.recruiters.forEach(rec => {
                 let percent = Math.round((rec.qualified / (rec.total || 1)) * 100);
@@ -657,9 +625,7 @@
                         <div class="recruiter-stat-row"><span>เข้าเงื่อนไข (≥500 ชิ้น):</span><span style="color: #e65100;">${rec.qualified} คน</span></div>
                     </div>
                 `;
-                let subItem = `<div class="recruiter-sub-item"><span>${rec.name}</span><span>${rec.total} คน</span></div>`;
-                sublistCum.innerHTML += subItem;
-                sublistCumAlt.innerHTML += subItem;
+                sublistCum.innerHTML += `<div class="recruiter-sub-item"><span>${rec.name}</span><span>${rec.total} คน</span></div>`;
             });
 
             let rawDates = data.staffList.map(s => s.normalizedDate).filter(d => d && d.length === 10);
@@ -749,7 +715,6 @@
             if (!dateStr) return;
             let cleanDateStr = String(dateStr).trim().substring(0, 10);
             
-            document.getElementById('selectedDateSectionTitle').innerText = `สรุป ณ วันที่ ${cleanDateStr}`;
             document.getElementById('attendanceTitle').innerText = `มาทำงาน (${cleanDateStr})`;
             document.getElementById('detailTitle').innerText = `รายละเอียดพนักงานประจำวันที่ ${cleanDateStr}`;
             document.getElementById('todayRecruiterTitle').innerText = `สรรหาได้วันที่ (${cleanDateStr})`;

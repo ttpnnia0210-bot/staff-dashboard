@@ -576,13 +576,13 @@
         </div>
 
         <div class="recruiter-section">
-            <h2>รายงานผลงานผู้สรรหา (สะสมจาก Daily_Staff) และเงื่อนไข (POD ≥ 500)</h2>
+            <h2>รายงานผลงานผู้สรรหา (สะสมจากสถานะพนักงาน) และเงื่อนไข (POD ≥ 500)</h2>
             <div class="recruiter-grid" id="recruiterGrid"></div>
         </div>
     </div>
 
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxvkgGX95c7qnwkzaVU43xouiYWdPGmi_kzsnkp2NkezETDhNcjbw4zwxlUcnOWyTZqcQ/exec";
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwM1fEyjhOsfX4BiqyElCggCqReB8RhFRx7S5j6l2VNZREizYGRs9SbrkX_rZ6P0NE_2A/exec";
 
         let globalData = null;
         let allAvailableDates = [];
@@ -617,6 +617,12 @@
                 globalData.staffList.forEach(s => {
                     s.normalizedDate = parseSheetDate(s.date);
                 });
+
+                if (globalData.hiresList) {
+                    globalData.hiresList.forEach(h => {
+                        h.normalizedHireDate = parseSheetDate(h.hireDate);
+                    });
+                }
 
                 renderDashboard(globalData);
                 if (isRefresh) {
@@ -756,16 +762,20 @@
             document.getElementById('detailTitle').innerText = `รายละเอียดพนักงานมาทำงานประจำวันที่ ${cleanDateStr}`;
             document.getElementById('todayRecruiterTitle').innerText = `พนักงานที่สรรหาได้ (${cleanDateStr})`;
 
+            // รายละเอียดพนักงานมาทำงานประจำวัน (จาก Daily_Staff)
             let matchedStaff = globalData.staffList.filter(s => s.normalizedDate === cleanDateStr);
             document.getElementById('valAttendance').innerText = matchedStaff.length + " คน";
-            document.getElementById('valTodayHired').innerText = matchedStaff.length + " คน";
+
+            // การ์ดขวาสุด: ดึงข้อมูลการสรรหาจากหน้า "สถานะพนักงาน" (hiresList) ตามวันที่เลือก
+            let matchedHires = globalData.hiresList ? globalData.hiresList.filter(h => h.normalizedHireDate === cleanDateStr) : [];
+            document.getElementById('valTodayHired').innerText = matchedHires.length + " คน";
 
             let sublistToday = document.getElementById('sidebarRecruiterToday');
             sublistToday.innerHTML = '';
             
             if (globalData && globalData.recruiters) {
                 globalData.recruiters.forEach(rec => {
-                    let countToday = matchedStaff.filter(h => h.recruiter === rec.name).length;
+                    let countToday = matchedHires.filter(h => h.recruiter === rec.name).length;
                     if (countToday > 0) {
                         sublistToday.innerHTML += `<div class="recruiter-sub-item"><span>${rec.name}</span><span>${countToday} คน</span></div>`;
                     }

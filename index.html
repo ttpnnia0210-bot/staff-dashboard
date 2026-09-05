@@ -599,7 +599,7 @@
     </div>
 
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbytQoR13NObjQwU0i7hrVl5v-_zI3uz0orA65RBYwMfcnlgE-qQidzn-AzUI9eyepExFg/exec";
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxnD-J-JGcz6UsVR0QoFii862_L1c6d5YhESLRaLb7k8OH2346pre898gvziWk-ldmH3Q/exec";
 
         let globalData = null;
         let allAvailableDates = [];
@@ -899,7 +899,7 @@
         function showDetailByDate(dateStr) {
             if (!dateStr) return;
             let cleanDateStr = String(dateStr).trim().substring(0, 10);
-            let todayStr = "2026-09-04";
+            let todayStr = new Date().toISOString().split('T')[0];
             let t = translations[currentLang];
             let unit = t.peopleUnit;
 

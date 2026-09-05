@@ -9,8 +9,8 @@
             --primary-red: #e61f26;
             --bg-color: #f7dcd9;
             --card-bg: #ffffff;
-            --text-dark: #333333;
-            --text-gray: #555555;
+            --text-dark: #222222;
+            --text-gray: #444444;
             --chart-bar-pod: #f4b41a;
             --chart-bar-att: #e61f26;
             --recruiter-bar: #e61f26;
@@ -20,34 +20,35 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
             margin: 0;
-            padding: 14px 20px;
+            padding: 16px 24px;
             color: var(--text-dark);
             min-height: 100vh;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 16px;
+            font-size: 15px; /* ขยายฟอนต์พื้นฐานทั้งหน้า */
         }
 
         .header {
             background-color: var(--primary-red);
             color: white;
-            padding: 12px 22px;
+            padding: 16px 26px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-radius: 8px;
+            border-radius: 10px;
         }
 
         .header-left {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
         }
 
         .logo-box {
-            width: 42px;
-            height: 42px;
+            width: 48px;
+            height: 48px;
             background: #ffffff;
             border-radius: 50%;
             display: flex;
@@ -59,8 +60,8 @@
         }
 
         .logo-emblem {
-            width: 34px;
-            height: 34px;
+            width: 38px;
+            height: 38px;
             position: relative;
             display: flex;
             align-items: center;
@@ -70,19 +71,19 @@
         .logo-yellow-part {
             position: absolute;
             left: 0;
-            width: 15px;
-            height: 30px;
+            width: 17px;
+            height: 34px;
             background-color: #f4b41a;
-            border-radius: 15px 0 0 15px;
+            border-radius: 17px 0 0 17px;
         }
 
         .logo-red-part {
             position: absolute;
             right: 0;
-            width: 21px;
-            height: 30px;
+            width: 24px;
+            height: 34px;
             background-color: #e61f26;
-            border-radius: 0 15px 15px 0;
+            border-radius: 0 17px 17px 0;
         }
 
         .logo-text-ht {
@@ -90,7 +91,7 @@
             z-index: 2;
             color: #ffffff;
             font-weight: 900;
-            font-size: 15px;
+            font-size: 17px;
             font-style: italic;
             letter-spacing: -1px;
             line-height: 1;
@@ -98,40 +99,40 @@
 
         .header h1 {
             margin: 0;
-            font-size: 20px;
+            font-size: 24px; /* ขยายหัวข้อหลัก */
         }
 
         .header-right {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
         }
 
         .filter-container {
             display: flex;
             align-items: center;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.15);
-            padding: 6px 12px;
-            border-radius: 6px;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.18);
+            padding: 8px 14px;
+            border-radius: 8px;
         }
 
         .filter-box {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
         }
 
         .filter-box label {
-            font-size: 13px;
-            font-weight: 500;
+            font-size: 14px;
+            font-weight: 600;
         }
 
         .filter-box input[type="date"] {
-            padding: 4px 8px;
-            border-radius: 4px;
+            padding: 6px 10px;
+            border-radius: 6px;
             border: none;
-            font-size: 13px;
+            font-size: 14px;
             cursor: pointer;
             font-family: inherit;
             color: var(--text-dark);
@@ -142,14 +143,14 @@
             background-color: #ffffff;
             color: var(--primary-red);
             border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
+            padding: 7px 14px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: bold;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
             transition: background 0.2s, transform 0.2s;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
@@ -174,27 +175,28 @@
         .top-metrics-grid {
             display: grid;
             grid-template-columns: repeat(9, 1fr);
-            gap: 6px;
+            gap: 8px;
         }
 
         .card {
             background-color: var(--card-bg);
-            padding: 10px 10px;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            padding: 14px 12px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.06);
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
         }
 
         .card h3 {
-            margin: 0 0 4px 0;
-            font-size: 10px;
+            margin: 0 0 6px 0;
+            font-size: 12px; /* ขยายตัวหนังสือหัวข้อการ์ดเล็กน้อย */
+            font-weight: 600;
             color: var(--text-gray);
         }
 
         .card .number {
-            font-size: 15px;
+            font-size: 19px; /* ขยายตัวเลขในการ์ดให้เด่นชัด */
             font-weight: bold;
             color: var(--primary-red);
             margin: 0;
@@ -207,18 +209,18 @@
         .number-start-today { color: #00796b !important; }
 
         .recruiter-sublist {
-            margin-top: 4px;
-            border-top: 1px solid #f0f0f0;
-            padding-top: 4px;
+            margin-top: 6px;
+            border-top: 1px solid #eee;
+            padding-top: 6px;
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 3px;
         }
 
         .recruiter-sub-item {
             display: flex;
             justify-content: space-between;
-            font-size: 10px;
+            font-size: 12px;
             color: #333;
         }
 
@@ -229,9 +231,9 @@
 
         .chart-section {
             background-color: var(--card-bg);
-            padding: 16px 20px;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            padding: 20px 24px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.06);
             width: 100%;
             box-sizing: border-box;
         }
@@ -241,38 +243,38 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--bg-color);
-            padding-bottom: 6px;
-            margin-bottom: 6px;
+            padding-bottom: 8px;
+            margin-bottom: 8px;
         }
 
         .chart-section h2 {
             margin: 0;
-            font-size: 16px;
+            font-size: 18px; /* ขยายหัวข้อกราฟ */
             color: var(--text-dark);
         }
 
         .chart-legend {
             display: flex;
-            gap: 12px;
-            font-size: 12px;
+            gap: 16px;
+            font-size: 14px;
         }
 
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
         }
 
         .legend-color {
-            width: 12px;
-            height: 12px;
-            border-radius: 2px;
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
         }
 
         .chart-hint {
-            font-size: 11px;
-            color: #777;
-            margin-bottom: 6px;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
             font-style: italic;
         }
 
@@ -280,11 +282,11 @@
             display: flex;
             align-items: flex-end;
             justify-content: flex-start;
-            height: 200px;
+            height: 220px;
             padding: 5px 0 0 0;
             border-bottom: 2px solid #ddd;
             overflow-x: auto;
-            gap: 8px;
+            gap: 10px;
             width: 100%;
         }
 
@@ -292,7 +294,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-width: 35px;
+            min-width: 40px;
             height: 100%;
             justify-content: flex-end;
             cursor: pointer;
@@ -313,7 +315,7 @@
         .bars-group {
             display: flex;
             align-items: flex-end;
-            gap: 4px;
+            gap: 5px;
             height: 100%;
             justify-content: flex-end;
         }
@@ -327,30 +329,31 @@
         }
 
         .chart-value {
-            font-size: 10px;
+            font-size: 12px; /* ขยายตัวเลขบนแท่งกราฟ */
             font-weight: bold;
-            color: #444;
-            margin-bottom: 2px;
+            color: #333;
+            margin-bottom: 3px;
             writing-mode: vertical-lr;
             transform: rotate(180deg);
         }
 
         .chart-bar-pod {
-            width: 12px;
+            width: 14px;
             background-color: var(--chart-bar-pod);
-            border-radius: 2px 2px 0 0;
+            border-radius: 3px 3px 0 0;
         }
 
         .chart-bar-att {
-            width: 12px;
+            width: 14px;
             background-color: var(--chart-bar-att);
-            border-radius: 2px 2px 0 0;
+            border-radius: 3px 3px 0 0;
         }
 
         .chart-label {
-            font-size: 10px;
+            font-size: 12px; /* ขยายวันที่ใต้กราฟ */
+            font-weight: 500;
             color: var(--text-gray);
-            margin-top: 4px;
+            margin-top: 6px;
             text-align: center;
             white-space: nowrap;
         }
@@ -358,32 +361,32 @@
         .bottom-section {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 16px;
         }
 
         .detail-box {
             background-color: var(--card-bg);
-            padding: 16px 20px;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            padding: 20px 24px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.06);
         }
 
         .detail-box h3 {
-            margin: 0 0 8px 0;
-            font-size: 15px;
+            margin: 0 0 12px 0;
+            font-size: 18px; /* ขยายหัวข้อตารางรายละเอียด */
             color: var(--primary-red);
             border-bottom: 1px solid var(--bg-color);
-            padding-bottom: 6px;
+            padding-bottom: 8px;
         }
 
         .detail-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 13px;
+            font-size: 15px; /* ขยายตัวอักษรในตาราง */
         }
 
         .detail-table th, .detail-table td {
-            padding: 8px 6px;
+            padding: 12px 10px;
             border-bottom: 1px solid #eee;
             text-align: center;
         }
@@ -392,61 +395,62 @@
             background-color: #fef0ee;
             color: #b3141b;
             font-weight: bold;
+            font-size: 16px;
         }
 
         .badge-active {
             background-color: #e6f4ea;
             color: #137333;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 600;
             display: inline-block;
         }
 
         .badge-resigned {
             background-color: #fce8e6;
             color: #c5221f;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 600;
             display: inline-block;
         }
 
         .recruiter-section {
             background-color: var(--card-bg);
-            padding: 16px 20px;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            padding: 20px 24px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.06);
         }
 
         .recruiter-section h2 {
-            margin: 0 0 10px 0;
-            font-size: 15px;
+            margin: 0 0 14px 0;
+            font-size: 18px; /* ขยายหัวข้อรายงานผู้สรรหา */
             color: var(--text-dark);
             border-bottom: 1px solid var(--bg-color);
-            padding-bottom: 6px;
+            padding-bottom: 8px;
         }
 
         .recruiter-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 14px;
+            gap: 16px;
         }
 
         .recruiter-card-item {
             background-color: #fafafa;
             border: 1px solid #eee;
-            border-radius: 6px;
-            padding: 10px 14px;
+            border-radius: 8px;
+            padding: 14px 18px;
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 8px;
         }
 
         .recruiter-name-flex {
             display: flex;
             justify-content: space-between;
-            font-size: 14px;
+            font-size: 16px; /* ขยายชื่อผู้สรรหาในการ์ด */
             font-weight: bold;
             color: var(--text-dark);
         }
@@ -454,7 +458,7 @@
         .recruiter-stat-row {
             display: flex;
             justify-content: space-between;
-            font-size: 13px;
+            font-size: 14px; /* ขยายสถิติผู้สรรหา */
             color: var(--text-gray);
         }
 
@@ -466,16 +470,16 @@
         .bar-container {
             flex-grow: 1;
             background-color: #e5e5e5;
-            height: 8px;
-            border-radius: 4px;
-            margin: 4px 0;
+            height: 10px;
+            border-radius: 5px;
+            margin: 6px 0;
             overflow: hidden;
         }
 
         .bar-fill {
             background-color: var(--recruiter-bar);
             height: 100%;
-            border-radius: 4px;
+            border-radius: 5px;
         }
     </style>
 </head>

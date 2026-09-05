@@ -497,7 +497,7 @@
             <div class="filter-container">
                 <div class="filter-box">
                     <label id="lblStartDate" for="startDatePicker">จากวันที่:</label>
-                    <input type="date" id="startDatePicker" onchange="onDateRangeChanged()">
+                    <input type="date" id="startDatePicker" value="2026-07-03" onchange="onDateRangeChanged()">
                 </div>
                 <div class="filter-box">
                     <label id="lblEndDate" for="endDatePicker">ถึงวันที่:</label>
@@ -814,15 +814,8 @@
 
             if (allAvailableDates.length > 0) {
                 let maxDate = allAvailableDates[allAvailableDates.length - 1];
-                let startIndex = Math.max(0, allAvailableDates.length - 30);
-                let startDate = allAvailableDates[startIndex];
-
-                let startPicker = document.getElementById('startDatePicker');
                 let endPicker = document.getElementById('endDatePicker');
-
-                if (!startPicker.value) startPicker.value = startDate;
                 if (!endPicker.value) endPicker.value = maxDate;
-
                 currentSelectedDate = maxDate;
             }
 

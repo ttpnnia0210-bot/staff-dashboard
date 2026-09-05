@@ -101,6 +101,12 @@
             font-size: 20px;
         }
 
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
         .filter-container {
             display: flex;
             align-items: center;
@@ -132,7 +138,7 @@
             background-color: #ffffff;
         }
 
-        .refresh-btn {
+        .btn-action {
             background-color: #ffffff;
             color: var(--primary-red);
             border: none;
@@ -148,11 +154,11 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
-        .refresh-btn:hover {
+        .btn-action:hover {
             background-color: #f1f1f1;
         }
 
-        .refresh-btn:active {
+        .btn-action:active {
             transform: scale(0.95);
         }
 
@@ -161,7 +167,7 @@
             transition: transform 0.6s ease;
         }
 
-        .refresh-btn.spinning .refresh-icon {
+        .btn-action.spinning .refresh-icon {
             transform: rotate(360deg);
         }
 
@@ -484,43 +490,46 @@
                     <span class="logo-text-ht">HT</span>
                 </div>
             </div>
-            <h1>Daily Staff Delivery Report</h1>
+            <h1 id="mainTitle">Daily Staff Delivery Report</h1>
         </div>
-        <div class="filter-container">
-            <div class="filter-box">
-                <label for="startDatePicker">จากวันที่:</label>
-                <input type="date" id="startDatePicker" onchange="onDateRangeChanged()">
+        <div class="header-right">
+            <button class="btn-action" id="langBtn" onclick="toggleLanguage()">🌐 中文 / ไทย</button>
+            <div class="filter-container">
+                <div class="filter-box">
+                    <label id="lblStartDate" for="startDatePicker">จากวันที่:</label>
+                    <input type="date" id="startDatePicker" onchange="onDateRangeChanged()">
+                </div>
+                <div class="filter-box">
+                    <label id="lblEndDate" for="endDatePicker">ถึงวันที่:</label>
+                    <input type="date" id="endDatePicker" onchange="onDateRangeChanged()">
+                </div>
+                <button class="btn-action" id="refreshBtn" onclick="refreshDashboardData()" title="รีเฟรชข้อมูลล่าสุด">
+                    <span class="refresh-icon">🔄</span> <span id="lblRefresh">รีเฟรช</span>
+                </button>
             </div>
-            <div class="filter-box">
-                <label for="endDatePicker">ถึงวันที่:</label>
-                <input type="date" id="endDatePicker" onchange="onDateRangeChanged()">
-            </div>
-            <button class="refresh-btn" id="refreshBtn" onclick="refreshDashboardData()" title="รีเฟรชข้อมูลล่าสุด">
-                <span class="refresh-icon">🔄</span> รีเฟรช
-            </button>
         </div>
     </div>
 
     <!-- Top Metrics Cards Row (9 Cards) -->
     <div class="top-metrics-grid">
         <div class="card">
-            <h3>ยอด POD สะสม (Total POD)</h3>
+            <h3 id="cardTitle1">ยอด POD สะสม (Total POD)</h3>
             <p class="number" id="valTotalPod">0</p>
         </div>
         <div class="card">
-            <h3>พนักงานทั้งหมด</h3>
+            <h3 id="cardTitle2">พนักงานทั้งหมด</h3>
             <p class="number" style="color: #1967d2;" id="valTotalRecruited">0 คน</p>
         </div>
         <div class="card">
-            <h3>สถานะทำงานอยู่ (Active)</h3>
+            <h3 id="cardTitle3">สถานะทำงานอยู่ (Active)</h3>
             <p class="number number-active" id="valActive">0 คน</p>
         </div>
         <div class="card">
-            <h3>สถานะลาออก (Resigned)</h3>
+            <h3 id="cardTitle4">สถานะลาออก (Resigned)</h3>
             <p class="number number-resigned" id="valResigned">0 คน</p>
         </div>
         <div class="card">
-            <h3>รอเริ่มงาน (Pending)</h3>
+            <h3 id="cardTitle5">รอเริ่มงาน (Pending)</h3>
             <p class="number number-pending" id="valPending">0 คน</p>
         </div>
         <div class="card">
@@ -549,15 +558,15 @@
             <div class="chart-legend">
                 <div class="legend-item">
                     <div class="legend-color" style="background-color: var(--chart-bar-pod);"></div>
-                    <span>ยอด POD (เหลือง)</span>
+                    <span id="legendPod">ยอด POD (เหลือง)</span>
                 </div>
                 <div class="legend-item">
                     <div class="legend-color" style="background-color: var(--chart-bar-att);"></div>
-                    <span>พนักงานมาทำงาน (แดง)</span>
+                    <span id="legendAtt">พนักงานมาทำงาน (แดง)</span>
                 </div>
             </div>
         </div>
-        <div class="chart-hint">* คลิกที่แท่งกราฟเพื่อดูรายละเอียดพนักงานรายวัน (เลือกช่วงวันที่ด้านบนเพื่อกรองกราฟได้)</div>
+        <div class="chart-hint" id="chartHint">* คลิกที่แท่งกราฟเพื่อดูรายละเอียดพนักงานรายวัน (เลือกช่วงวันที่ด้านบนเพื่อกรองกราฟได้)</div>
         <div class="bar-chart-container" id="chartContainer"></div>
     </div>
 
@@ -568,15 +577,15 @@
             <table class="detail-table">
                 <thead>
                     <tr>
-                        <th>รหัสพนักงาน</th>
-                        <th>ผู้จัดการสรรหา</th>
-                        <th>Area</th>
-                        <th>Station</th>
-                        <th>Type</th>
-                        <th>ชื่อพนักงาน</th>
-                        <th>ผู้สรรหา</th>
-                        <th>สถานะ</th>
-                        <th>POD</th>
+                        <th id="thEmpId">รหัสพนักงาน</th>
+                        <th id="thManager">ผู้จัดการสรรหา</th>
+                        <th id="thArea">Area</th>
+                        <th id="thStation">Station</th>
+                        <th id="thType">Type</th>
+                        <th id="thName">ชื่อพนักงาน</th>
+                        <th id="thRecruiter">ผู้สรรหา</th>
+                        <th id="thStatus">สถานะ</th>
+                        <th id="thPod">POD</th>
                     </tr>
                 </thead>
                 <tbody id="detailTableBody"></tbody>
@@ -584,7 +593,7 @@
         </div>
 
         <div class="recruiter-section">
-            <h2>รายงานผลงานผู้สรรหา และเงื่อนไข (POD ≥ 500)</h2>
+            <h2 id="recruiterSectionTitle">รายงานผลงานผู้สรรหา และเงื่อนไข (POD ≥ 500)</h2>
             <div class="recruiter-grid" id="recruiterGrid"></div>
         </div>
     </div>
@@ -595,6 +604,115 @@
         let globalData = null;
         let allAvailableDates = [];
         let currentSelectedDate = "";
+        let currentLang = 'th'; // 'th' หรือ 'cn'
+
+        const translations = {
+            th: {
+                mainTitle: "Daily Staff Delivery Report",
+                lblStartDate: "จากวันที่:",
+                lblEndDate: "ถึงวันที่:",
+                lblRefresh: "รีเฟรช",
+                cardTitle1: "ยอด POD สะสม (Total POD)",
+                cardTitle2: "พนักงานทั้งหมด",
+                cardTitle3: "สถานะทำงานอยู่ (Active)",
+                cardTitle4: "สถานะลาออก (Resigned)",
+                cardTitle5: "รอเริ่มงาน (Pending)",
+                attendance: "มาทำงาน",
+                absent: "ขาด / ลา",
+                startToday: "เริ่มงานวันนี้",
+                todayRecruiter: "พนักงานที่สรรหาได้",
+                chartTitleText: "กราฟเปรียบเทียบยอด POD และจำนวนพนักงานมาทำงานรายวัน",
+                legendPod: "ยอด POD (เหลือง)",
+                legendAtt: "พนักงานมาทำงาน (แดง)",
+                chartHint: "* คลิกที่แท่งกราฟเพื่อดูรายละเอียดพนักงานรายวัน (เลือกช่วงวันที่ด้านบนเพื่อกรองกราฟได้)",
+                detailTitle: "รายละเอียดพนักงานมาทำงานประจำวันที่",
+                thEmpId: "รหัสพนักงาน",
+                thManager: "ผู้จัดการสรรหา",
+                thArea: "Area",
+                thStation: "Station",
+                thType: "Type",
+                thName: "ชื่อพนักงาน",
+                thRecruiter: "ผู้สรรหา",
+                thStatus: "สถานะ",
+                thPod: "POD",
+                recruiterSectionTitle: "รายงานผลงานผู้สรรหา และเงื่อนไข (POD ≥ 500)",
+                totalFound: "หาได้ทั้งหมด:",
+                conditionMet: "เข้าเงื่อนไข (≥500 ชิ้น):",
+                peopleUnit: " คน"
+            },
+            cn: {
+                mainTitle: "每日员工配送 report",
+                lblStartDate: "开始日期:",
+                lblEndDate: "结束日期:",
+                lblRefresh: "刷新",
+                cardTitle1: "累计 POD 总数",
+                cardTitle2: "总员工人数",
+                cardTitle3: "在职状态 (Active)",
+                cardTitle4: "离职状态 (Resigned)",
+                cardTitle5: "待入职 (Pending)",
+                attendance: "出勤人数",
+                absent: "缺勤 / 请假",
+                startToday: "今日入职",
+                todayRecruiter: "今日招聘人数",
+                chartTitleText: "POD 与每日出勤员工数量对比图",
+                legendPod: "POD 数量 (黄)",
+                legendAtt: "出勤员工 (红)",
+                chartHint: "* 点击图表柱状图查看每日员工详情（可通过上方日期筛选）",
+                detailTitle: "每日出勤员工详情 - 日期: ",
+                thEmpId: "员工编号",
+                thManager: "招聘经理",
+                thArea: "区域",
+                thStation: "站点",
+                thType: "类型",
+                thName: "员工姓名",
+                thRecruiter: "招聘专员",
+                thStatus: "状态",
+                thPod: "POD",
+                recruiterSectionTitle: "招聘人员业绩报告及条件 (POD ≥ 500)",
+                totalFound: "总招聘数:",
+                conditionMet: "达标人数 (≥500):",
+                peopleUnit: " 人"
+            }
+        };
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'th' ? 'cn' : 'th';
+            updateLanguageUI();
+        }
+
+        function updateLanguageUI() {
+            let t = translations[currentLang];
+            document.getElementById('mainTitle').innerText = t.mainTitle;
+            document.getElementById('lblStartDate').innerText = t.lblStartDate;
+            document.getElementById('lblEndDate').innerText = t.lblEndDate;
+            document.getElementById('lblRefresh').innerText = t.lblRefresh;
+            document.getElementById('cardTitle1').innerText = t.cardTitle1;
+            document.getElementById('cardTitle2').innerText = t.cardTitle2;
+            document.getElementById('cardTitle3').innerText = t.cardTitle3;
+            document.getElementById('cardTitle4').innerText = t.cardTitle4;
+            document.getElementById('cardTitle5').innerText = t.cardTitle5;
+            document.getElementById('chartTitleText').innerText = t.chartTitleText;
+            document.getElementById('legendPod').innerText = t.legendPod;
+            document.getElementById('legendAtt').innerText = t.legendAtt;
+            document.getElementById('chartHint').innerText = t.chartHint;
+            document.getElementById('thEmpId').innerText = t.thEmpId;
+            document.getElementById('thManager').innerText = t.thManager;
+            document.getElementById('thArea').innerText = t.thArea;
+            document.getElementById('thStation').innerText = t.thStation;
+            document.getElementById('thType').innerText = t.thType;
+            document.getElementById('thName').innerText = t.thName;
+            document.getElementById('thRecruiter').innerText = t.thRecruiter;
+            document.getElementById('thStatus').innerText = t.thStatus;
+            document.getElementById('thPod').innerText = t.thPod;
+            document.getElementById('recruiterSectionTitle').innerText = t.recruiterSectionTitle;
+
+            if (globalData) {
+                renderDashboard(globalData);
+                if (currentSelectedDate) {
+                    showDetailByDate(currentSelectedDate);
+                }
+            }
+        }
 
         function parseSheetDate(dateStr) {
             if (!dateStr) return "";
@@ -665,13 +783,16 @@
         }
 
         function renderDashboard(data) {
+            let t = translations[currentLang];
+            let unit = t.peopleUnit;
+
             let calculatedTotalPod = data.staffList.reduce((sum, s) => sum + Number(s.pod || 0), 0);
             document.getElementById('valTotalPod').innerText = calculatedTotalPod.toLocaleString();
 
-            document.getElementById('valTotalRecruited').innerText = (data.summary.total_recruited || 0) + " คน";
-            document.getElementById('valActive').innerText = (data.summary.active_staff || 0) + " คน";
-            document.getElementById('valResigned').innerText = (data.summary.resigned_staff || 0) + " คน";
-            document.getElementById('valPending').innerText = (data.summary.pending_staff || 0) + " คน";
+            document.getElementById('valTotalRecruited').innerText = (data.summary.total_recruited || 0) + unit;
+            document.getElementById('valActive').innerText = (data.summary.active_staff || 0) + unit;
+            document.getElementById('valResigned').innerText = (data.summary.resigned_staff || 0) + unit;
+            document.getElementById('valPending').innerText = (data.summary.pending_staff || 0) + unit;
 
             let recGrid = document.getElementById('recruiterGrid');
             recGrid.innerHTML = '';
@@ -682,8 +803,8 @@
                     <div class="recruiter-card-item">
                         <div class="recruiter-name-flex"><span>${rec.name}</span></div>
                         <div class="bar-container"><div class="bar-fill" style="width: ${percent}%;"></div></div>
-                        <div class="recruiter-stat-row"><span>หาได้ทั้งหมด:</span><span>${rec.total} คน</span></div>
-                        <div class="recruiter-stat-row"><span>เข้าเงื่อนไข (≥500 ชิ้น):</span><span style="color: #e65100;">${rec.qualified} คน</span></div>
+                        <div class="recruiter-stat-row"><span>${t.totalFound}</span><span>${rec.total} ${unit}</span></div>
+                        <div class="recruiter-stat-row"><span>${t.conditionMet}</span><span style="color: #e65100;">${rec.qualified} ${unit}</span></div>
                     </div>
                 `;
             });
@@ -699,8 +820,8 @@
                 let startPicker = document.getElementById('startDatePicker');
                 let endPicker = document.getElementById('endDatePicker');
 
-                startPicker.value = startDate;
-                endPicker.value = maxDate;
+                if (!startPicker.value) startPicker.value = startDate;
+                if (!endPicker.value) endPicker.value = maxDate;
 
                 currentSelectedDate = maxDate;
             }
@@ -779,27 +900,29 @@
             if (!dateStr) return;
             let cleanDateStr = String(dateStr).trim().substring(0, 10);
             let todayStr = "2026-09-04";
+            let t = translations[currentLang];
+            let unit = t.peopleUnit;
 
-            document.getElementById('attendanceTitle').innerText = `มาทำงาน (${cleanDateStr})`;
-            document.getElementById('absentTitle').innerText = `ขาด / ลา (${cleanDateStr})`;
-            document.getElementById('detailTitle').innerText = `รายละเอียดพนักงานมาทำงานประจำวันที่ ${cleanDateStr}`;
+            document.getElementById('attendanceTitle').innerText = `${t.attendance} (${cleanDateStr})`;
+            document.getElementById('absentTitle').innerText = `${t.absent} (${cleanDateStr})`;
+            document.getElementById('detailTitle').innerText = `${t.detailTitle}${cleanDateStr}`;
             
-            document.getElementById('startTodayTitle').innerText = `เริ่มงานวันนี้ (${todayStr})`;
-            document.getElementById('todayRecruiterTitle').innerText = `พนักงานที่สรรหาได้ (${todayStr})`;
+            document.getElementById('startTodayTitle').innerText = `${t.startToday} (${todayStr})`;
+            document.getElementById('todayRecruiterTitle').innerText = `${t.todayRecruiter} (${todayStr})`;
 
             let matchedStaff = globalData.staffList.filter(s => s.normalizedDate === cleanDateStr);
             let attendanceCount = matchedStaff.length;
-            document.getElementById('valAttendance').innerText = attendanceCount + " คน";
+            document.getElementById('valAttendance').innerText = attendanceCount + unit;
 
             let activeStaffCount = Number(globalData.summary.active_staff || 0);
             let absentCount = Math.max(0, activeStaffCount - attendanceCount);
-            document.getElementById('valAbsent').innerText = absentCount + " คน";
+            document.getElementById('valAbsent').innerText = absentCount + unit;
 
             let matchedStarts = globalData.startDatesList ? globalData.startDatesList.filter(sd => sd.normalizedStartDate === todayStr) : [];
-            document.getElementById('valStartToday').innerText = matchedStarts.length + " คน";
+            document.getElementById('valStartToday').innerText = matchedStarts.length + unit;
 
             let matchedHires = globalData.hiresList ? globalData.hiresList.filter(h => h.normalizedHireDate === todayStr) : [];
-            document.getElementById('valTodayHired').innerText = matchedHires.length + " คน";
+            document.getElementById('valTodayHired').innerText = matchedHires.length + unit;
 
             let sublistToday = document.getElementById('sidebarRecruiterToday');
             sublistToday.innerHTML = '';
@@ -808,7 +931,7 @@
                 globalData.recruiters.forEach(rec => {
                     let countToday = matchedHires.filter(h => h.recruiter === rec.name).length;
                     if (countToday > 0) {
-                        sublistToday.innerHTML += `<div class="recruiter-sub-item"><span>${rec.name}</span><span>${countToday} คน</span></div>`;
+                        sublistToday.innerHTML += `<div class="recruiter-sub-item"><span>${rec.name}</span><span>${countToday} ${unit}</span></div>`;
                     }
                 });
             }

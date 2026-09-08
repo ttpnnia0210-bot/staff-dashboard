@@ -27,7 +27,7 @@
             display: flex;
             flex-direction: column;
             gap: 18px;
-            font-size: 18px; /* ขยายฟอนต์หลักทั้งหน้าให้ใหญ่สะใจ */
+            font-size: 18px;
         }
 
         .header {
@@ -99,7 +99,7 @@
 
         .header h1 {
             margin: 0;
-            font-size: 28px; /* หัวข้อหลักใหญ่พิเศษ */
+            font-size: 28px;
             font-weight: bold;
         }
 
@@ -192,13 +192,13 @@
 
         .card h3 {
             margin: 0 0 8px 0;
-            font-size: 14px; /* ขยายหัวข้อการ์ดด้านบนให้ชัดเจน */
+            font-size: 14px;
             font-weight: bold;
             color: var(--text-gray);
         }
 
         .card .number {
-            font-size: 23px; /* ขยายตัวเลขเด่นชัดมากยิ่งขึ้นเมื่อย่อ/แคป */
+            font-size: 23px;
             font-weight: 900;
             color: var(--primary-red);
             margin: 0;
@@ -252,7 +252,7 @@
 
         .chart-section h2 {
             margin: 0;
-            font-size: 22px; /* หัวข้อกราฟใหญ่ขึ้น */
+            font-size: 22px;
             font-weight: bold;
             color: var(--text-dark);
         }
@@ -335,7 +335,7 @@
         }
 
         .chart-value {
-            font-size: 14px; /* ตัวเลขบนแท่งกราฟใหญ่ชัดเจน */
+            font-size: 14px;
             font-weight: 900;
             color: #111;
             margin-bottom: 4px;
@@ -356,7 +356,7 @@
         }
 
         .chart-label {
-            font-size: 14px; /* วันที่ใต้กราฟใหญ่ชัดเจน */
+            font-size: 14px;
             font-weight: bold;
             color: var(--text-dark);
             margin-top: 8px;
@@ -379,7 +379,7 @@
 
         .detail-box h3 {
             margin: 0 0 14px 0;
-            font-size: 22px; /* หัวข้อตารางใหญ่ขึ้น */
+            font-size: 22px;
             font-weight: bold;
             color: var(--primary-red);
             border-bottom: 2px solid var(--bg-color);
@@ -389,7 +389,7 @@
         .detail-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 17px; /* ตัวอักษรในตารางใหญ่สะใจ */
+            font-size: 17px;
         }
 
         .detail-table th, .detail-table td {
@@ -458,7 +458,7 @@
         .recruiter-name-flex {
             display: flex;
             justify-content: space-between;
-            font-size: 19px; /* ชื่อผู้สรรหาในการ์ดใหญ่ชัดเจน */
+            font-size: 19px;
             font-weight: 900;
             color: var(--text-dark);
         }
@@ -466,7 +466,7 @@
         .recruiter-stat-row {
             display: flex;
             justify-content: space-between;
-            font-size: 16px; /* สถิติผู้สรรหาใหญ่ชัดเจน */
+            font-size: 16px;
             font-weight: bold;
             color: var(--text-gray);
         }
@@ -729,27 +729,45 @@
 
         function parseSheetDate(dateStr) {
             if (!dateStr) return "";
-            let s = String(dateStr).trim().split('T')[0].split(' ')[0];
-            if (s.includes('/')) {
-                let parts = s.split('/');
-                if (parts.length === 3) {
-                    let d = parts[0].padStart(2, '0');
-                    let m = parts[1].padStart(2, '0');
-                    let y = parts[2];
-                    if (y.length === 2) y = "20" + y;
-                    return `${y}-${m}-${d}`;
+            let cleanStr = String(dateStr).trim().split('T')[0].split(' ')[0];
+            
+            if (/^\d{4}-\d{2}-\d{2}$/.test(cleanStr)) {
+                return cleanStr;
+            }
+
+            let parts = [];
+            if (cleanStr.includes('/')) {
+                parts = cleanStr.split('/');
+            } else if (cleanStr.includes('.')) {
+                parts = cleanStr.split('.');
+            } else if (cleanStr.includes('-')) {
+                parts = cleanStr.split('-');
+            }
+
+            if (parts.length === 3) {
+                let p1 = parts[0];
+                let p2 = parts[1].padStart(2, '0');
+                let p3 = parts[2];
+                if (p3.length === 2) p3 = "20" + p3;
+
+                // รองรับทั้ง DD/MM/YYYY และ MM/DD/YYYY (เช่น 07/09/2026 -> ปี-เดือน-วัน)
+                if (p3.length === 4) {
+                    return `${p3}-${p2}-${p1.padStart(2, '0')}`;
+                } else if (p1.length === 4) {
+                    return `${p1}-${p2}-${p3.padStart(2, '0')}`;
                 }
             }
-            if (s.includes('.')) {
-                let parts = s.split('.');
-                if (parts.length === 3) {
-                    let y = parts[0];
-                    let m = parts[1].padStart(2, '0');
-                    let d = parts[2].padStart(2, '0');
-                    return `${y}-${m}-${d}`;
-                }
+
+            let d = new Date(dateStr);
+            if (!isNaN(d.getTime())) {
+                let y = d.getFullYear();
+                if (y < 2000) y += 543;
+                let m = String(d.getMonth() + 1).padStart(2, '0');
+                let day = String(d.getDate()).padStart(2, '0');
+                return `${y}-${m}-${day}`;
             }
-            return s;
+
+            return cleanStr;
         }
 
         async function loadDashboardData(isRefresh = false) {

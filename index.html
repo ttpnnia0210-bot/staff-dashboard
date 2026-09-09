@@ -439,26 +439,27 @@
             padding-bottom: 10px;
         }
 
+        /* ปรับให้การ์ดผู้สรรหาเรียงเป็น 4 คอลัมน์ในบรรทัดเดียวกัน และขนาดกะทัดรัดขึ้น */
         .recruiter-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 18px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
         }
 
         .recruiter-card-item {
             background-color: #fafafa;
             border: 1px solid #ddd;
-            border-radius: 10px;
-            padding: 16px 20px;
+            border-radius: 8px;
+            padding: 10px 14px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 6px;
         }
 
         .recruiter-name-flex {
             display: flex;
             justify-content: space-between;
-            font-size: 19px;
+            font-size: 16px;
             font-weight: 900;
             color: var(--text-dark);
         }
@@ -466,7 +467,7 @@
         .recruiter-stat-row {
             display: flex;
             justify-content: space-between;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
             color: var(--text-gray);
         }
@@ -479,16 +480,16 @@
         .bar-container {
             flex-grow: 1;
             background-color: #e0e0e0;
-            height: 12px;
-            border-radius: 6px;
-            margin: 8px 0;
+            height: 8px;
+            border-radius: 4px;
+            margin: 4px 0;
             overflow: hidden;
         }
 
         .bar-fill {
             background-color: var(--recruiter-bar);
             height: 100%;
-            border-radius: 6px;
+            border-radius: 4px;
         }
     </style>
 </head>
@@ -750,7 +751,6 @@
                 let p3 = parts[2];
                 if (p3.length === 2) p3 = "20" + p3;
 
-                // รองรับทั้ง DD/MM/YYYY และ MM/DD/YYYY (เช่น 07/09/2026 -> ปี-เดือน-วัน)
                 if (p3.length === 4) {
                     return `${p3}-${p2}-${p1.padStart(2, '0')}`;
                 } else if (p1.length === 4) {
